@@ -6,13 +6,71 @@ PAYU
 :description: A Payu training course
 :date: 3 October 2018
 
-Introduction
-============
 
-Test
+What is Payu?
+=============
+
+
+Etymology
+=========
+
+* *P*\ ython on v\ *AYU*
+
+  Vayu was Raijin's predecessor and has passed away...
+
+  ...but Payu lives on!
+
+
+Motivation
+==========
+
+Long ago, we managed many, many jobscripts.
+
+Many kinds of scripts:
+   bash, tcsh, ksh, ...
+
+Many different models:
+   MOM, MITgcm, Q-GCM, ACCESS, ...
+
+Juggling and sharing scripts was becoming a problem!
+
+
+Prehistoric Payu
+================
+
+.. code::
+
+   #!/usr/bin/env python
+   import os
+   from payu import gold
+
+   def main():
+       expt = gold(forcing='andrew')
+
+       expt.setup()
+       expt.run()
+       expt.archive()
+       if expt.counter < expt.max_counter:
+           expt.resubmit()
+
+   if __name__ == '__main__': main()
 
 
 Setting up
 ==========
 
-Test 2
+Designate a "control directory":
+
+.. code:: bash
+
+   payu init -m mom
+
+This will initialise your "laboratory"
+
+
+Your laboratory
+===============
+
+Laboratory path ($LAB)
+   /short/$PROJECT/$USER/mom
+
