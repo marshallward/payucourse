@@ -1,0 +1,18 @@
+====
+PAYU
+====
+
+:author: Marshall Ward
+:description: A Payu training course
+:date: 3 October 2018
+
+Introduction
+============
+
+Test
+
+
+Setting up
+==========
+
+Test 2
