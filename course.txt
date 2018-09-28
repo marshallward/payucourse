@@ -59,18 +59,59 @@ Prehistoric Payu
 Setting up
 ==========
 
-Designate a "control directory":
-
-.. code:: bash
-
-   payu init -m mom
-
 This will initialise your "laboratory"
 
 
 Your laboratory
 ===============
 
-Laboratory path ($LAB)
-   /short/$PROJECT/$USER/mom
+Initialise your "laboratory"::
 
+   payu init -m mom
+
+What's to be inside?
+
+* Lab path
+* Archive
+* bin, etc
+
+(Check: Do we automatically create this?)
+
+
+Using a pre-existing experiment
+===============================
+
+Clone an existing experiment (usually to $HOME):
+
+.. code:: bash
+
+   cd $HOME
+   mkdir -p mom
+   cd mom
+   git clone /short/public/mxw900/payu_expts/bowl1
+
+This is the *control directory* for ``bowl1``
+
+
+Your experiment
+===============
+
+Your Payu configuration file:
+
+* ``config.yaml``
+
+Your model (MOM) configuration files:
+
+* ``input.nml``
+
+* ``diag_table``
+
+* ``data_table``
+
+* ``field_table``
+
+
+Inside your experiment
+======================
+
+TODO: Go over ``config.yaml``
