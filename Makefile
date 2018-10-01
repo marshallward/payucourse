@@ -4,11 +4,9 @@ FLAGS=-s -f rst -t revealjs -V revealjs-url=./reveal.js
 
 all: course.html reveal.js
 
-master.zip:
-	wget ${REPO}
-
-reveal.js: master.zip
-	unzip $^
+reveal.js:
+	wget -N ${REPO}
+	unzip master.zip
 	mv reveal.js-master reveal.js
 
 course.html: course.txt
