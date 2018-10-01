@@ -104,7 +104,7 @@ This job is pre-configured, run it!
    cd bowl1
    payu run
 
-Output will soon appear in the ``archive`` directory.
+Model will run in ``work`` and saved to ``archive``
 
 
 Your experiment
@@ -149,7 +149,17 @@ Inside your experiment
 Inspecting the output
 =====================
 
-* ``archvie/output000``
+Check your model output (and errors):
+
+* ``mom.out``, ``mom.err``
+
+PBS logs are also stored::
+
+* ``bowl1.o####``, ``bowl1.e####``
+
+Model output is archived here:
+
+* ``archive/output000``
 
 * ``archive/restart000``
 
@@ -176,6 +186,22 @@ Multiple runs
 .. code::
 
    payu run -n 5
+
+
+Laboratory overview
+===================
+
+General structure of the laboratory:
+
+* ``archive``
+
+* ``bin``
+
+* ``codebase`` (sometimes)
+
+* ``input``
+
+* ``work``
 
 
 Supported models
