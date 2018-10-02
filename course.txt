@@ -107,6 +107,10 @@ This is the "*control directory*" for ``bowl1``
 Run the experiment
 ------------------
 
+Use the system payu::
+
+   module load payu
+
 This job is pre-configured, run it!
 
 .. code:: sh
@@ -159,16 +163,14 @@ Experiment Configuration
 Inspecting the output
 ---------------------
 
-Model stdout, stderr
-   ``mom.out``, ``mom.err``
-
-Scheduler logs
-   ``bowl1.o${jobid} ``bowl1.e${jobid}``
-
-Model output in ``archive/``
-   ``output000``, ``restart000``
-
-.. Every 5th restart is saved, and any inbetween
+======================  ======================
+``mom.out``             Model output
+``mom.err``             Model error
+``bowl1.o${jobid}``     PBS (payu) output
+``bowl1.e${jobid}``     PBS (payu) error
+``archive/output000``   Model output files
+``archive/restart000``  Restart (pickup) files
+======================  ======================
 
 
 Cleaning up
@@ -178,7 +180,7 @@ To clear ``work/`` and save PBS logs::
 
    payu sweep
 
-The completely delete the experiment::
+Or to completely delete the experiment::
 
    payu sweep --hard
 
@@ -333,7 +335,7 @@ Config         Description       Default
 ============   ==============    ============
 ``queue``      PBS Queue         ``normal``
 ``project``    SU Account        ``$PROJECT``
-``jobname``    Queue job name    Expt dir
+``jobname``    Queue job name    ``name``
 ``walltime``   Time request      (From PBS)
 ``ncpus``      CPU request       1
 ``mem``        RAM request       Max node mem
@@ -391,9 +393,17 @@ Feature overview
 Multiple runs
 -------------
 
+To do multiple runs in sequence:
+
 .. code::
 
-   payu run -n 5
+   payu run -n 20
+
+We save every output, and every 5th restart.
+
+To change the rate::
+
+   restart_freq: 1
 
 
 Userscript support
