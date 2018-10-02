@@ -421,32 +421,6 @@ Subcommands and scripts can be injected after key steps
    postscript: cleanup.sh
 
 
-Sharing your experiments
-========================
-
-Experiment tracking
--------------------
-
-Experiment configs are tracked by git.  To see its history::
-
-   git log
-
-To disable, add to ``config.yaml``::
-
-   runlog: False
-
-
-GitHub integration
-------------------
-
-Sync your experiment on GitHub::
-
-   payu ghsetup
-   payu push
-
-(Warning: Probably going to rename ``push``...)
-
-
 Supported models
 ----------------
 
@@ -454,7 +428,94 @@ To see the supported models::
 
    payu list
 
-Although support can't always be guaranteed...
+But expect some atrophy...
+
+
+Forking and sharing experiments
+===============================
+
+Creating a new experiment
+-------------------------
+
+Let's have some **FUN** and increase the timestep::
+
+   cd ../mom   # Or whatever
+   git clone bowl1 bowl2
+   cd bowl2
+
+We are in a hurry, so let's make ``dt_ocean`` in ``input.nml`` very large::
+
+   f90nml -g ocean_model_nml -v dt_ocean=86400 input.nml > tmp.nml
+   mv tmp.nml input.nml
+
+(Or use a text editor)
+
+
+Recording your progress
+-----------------------
+
+Track your changes to the run::
+
+   git log
+
+and responsible people *always* document their changes::
+
+   git commit -am "Testing a large timestep"
+
+But if you're lazy then payu will commit upon completion.
+
+Let's run it!
+
+
+FAILURE
+-------
+
+.. image:: img/angry.jpg
+
+Your run crashed!!!
+
+
+Inspecting failed jobs
+----------------------
+
+Failed jobs retain ``mom.out``, ``mom.err``, and ``work/``.
+
+From ``mom.err``::
+
+   FATAL from PE    2: ==>Error: time step instability detected for baroclinic gravity waves in ocean_model_mod
+
+   forrtl: error (78): process killed (SIGTERM)
+
+Errors are saved to ``archive/error_logs`` with PBS job IDs.
+
+
+GitHub integration
+------------------
+
+You can sync your experiment on GitHub::
+
+   payu ghsetup
+   payu push
+
+Visit your experiment in GitHub!
+
+(Warning: Probably going to rename ``push``...)
+
+
+Other GitHub features
+---------------------
+
+To disable the runlog::
+
+   runlog: False
+
+Or to save the jobs to an organization::
+
+   organization: mxw900-raijin
+
+There are few other features here, and someday may be documented!
+
+Currently ``payu push`` is manual, but we could make it automatic.
 
 
 Coupled Models
