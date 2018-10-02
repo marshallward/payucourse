@@ -316,15 +316,13 @@ Configuring your experiment
 =========   ===============   ==============
 Config      Description       Default
 =========   ===============   ==============
-``model``   Model type        -
+``model``   Model type        (required!)
 ``name``    Experiment name   Expt directory
-``exe``     Queue job name    Executable
-``input``   Time request      Model inputs
+``exe``     Executable        Set by driver
+``input``   Model inputs      -
 =========   ===============   ==============
 
-Paths can be absolute or relative to the lab
-
-Inputs can support files or directories
+Paths can be absolute or relative to the $LAB
 
 
 Scheduler configuration
@@ -398,16 +396,34 @@ Multiple runs
    payu run -n 5
 
 
-Platform support
-----------------
+Userscript support
+------------------
 
-Sandy bridge vs Broadwell
+Subcommands and scripts can be injected after key steps
 
+.. code:: yaml
+
+   userscripts:
+      init: 'echo "some_data" > input.nml'
+      setup: patch_inputs.py
+      run: 'qsub postprocess.sh'
+
+   postscript: cleanup.sh
+
+
+Sharing your experiments
+========================
 
 Experiment tracking
 -------------------
 
-TODO: Change something, run, and then ``git log``.
+Experiment configs are tracked by git.  To see its history::
+
+   git log
+
+To disable, add to ``config.yaml``::
+
+   runlog: False
 
 
 GitHub integration
