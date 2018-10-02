@@ -34,6 +34,13 @@ Many different models:
 Juggling and sharing scripts was becoming a problem!
 
 
+----
+
+.. image:: img/andy_at_nci.png
+
+"Why not just do everything in Python?"
+
+
 Prehistoric Payu
 ----------------
 
