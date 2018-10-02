@@ -62,30 +62,6 @@ Prehistoric Payu
        main()
 
 
-.. remove me
-
-   Setting up
-   ==========
-
-   This will initialise your "laboratory"
-
-
-   Your laboratory
-   ===============
-
-   Initialise your "laboratory"::
-
-      payu init -m mom
-
-   What's to be inside?
-
-   * Lab path
-   * Archive
-   * bin, etc
-
-   (Check: Do we automatically create this?)
-
-
 Using Payu
 ==========
 
@@ -213,6 +189,9 @@ Laboratory overview
 ``work``       Ongoing (or failed) experiments
 ============   ===============================
 
+"``payu init -m mom``" will create these directories
+
+(But usually not necessary)
 
 A simple configuration
 ----------------------
@@ -454,17 +433,6 @@ Currently you must match your module to the executable, but we have some
 disabled code to automatically fix the MPI module.
 
 
-Environment variables
----------------------
-
-You can configure environment variables, with some basic variable
-substitution.
-
-.. code:: yaml
-
-   TODO
-
-
 Userscript support
 ------------------
 
@@ -477,7 +445,7 @@ Subcommands and scripts can be injected after key steps
       setup: patch_inputs.py
       run: 'qsub postprocess.sh'
 
-   postscript: cleanup.sh
+   postscript: sync_output_to_gdata.sh
 
 These will run after the prescribed section.  ``postscript`` runs after
 collation.
@@ -582,7 +550,7 @@ Or to save the jobs to an organization::
 
 There are few other features here, and someday may be documented!
 
-Currently ``payu push`` is manual, but we could make it automatic.
+Currently "``payu push``" is manual, but we could make it automatic.
 
 
 Coupled Models
@@ -656,3 +624,52 @@ NCI will often request a job script, which is a challenge because we don't one!
 
 ... but, NCI is starting to understand, and CMS is usually prepared to run
 interference.
+
+
+Summary
+=======
+
+What does Payu do?
+------------------
+
+* Common interface for many models
+
+* Manages your input files, executables, outputs, and restarts
+
+* Tracks changes to your experiment
+
+* Provides hooks to configure and control your job
+
+* Enables sharing of configurations and inputs
+
+
+Special Thanks
+--------------
+
+.. columns::
+
+   .. column::
+
+      .. image:: img/nic.jpeg
+         :width: 42%
+
+   .. column::
+
+      .. image:: img/aidan.jpeg
+
+Nic Hannah and Aidan Heerdegen have been top-level contributors and maintainers
+of various pieces for a very long time.
+
+Thank you!!
+
+
+Future works
+------------
+
+Work only stops when people stop asking for features.
+
+Questions?
+
+What would you like to see?
+
+Even better, contribute!
