@@ -116,7 +116,7 @@ This job is pre-configured, run it!
 
 * Model will run in ``work/``
 
-* Output saved to saved to ``archive/``
+* Output saved to ``archive/``
 
 
 Your experiment
@@ -163,7 +163,7 @@ Model stdout, stderr
    ``mom.out``, ``mom.err``
 
 Scheduler logs
-   ``bowl1.o####``, ``bowl1.e####``
+   ``bowl1.o${jobid} ``bowl1.e${jobid}``
 
 Model output in ``archive/``
    ``output000``, ``restart000``
@@ -230,8 +230,8 @@ We use the YAML format
 
    exe: mom6_intel17
    input:
-      - om4_grid
-      - om4_atm
+       - om4_grid
+       - om4_atm
 
 Most variables have "sensible" defaults
 
@@ -247,7 +247,7 @@ A more complex configuration
    walltime: 02:30:00
    jobname: om2_jra55
    ncpus: 1153
-   #memory: 2000Gb
+   mem: 2000GB
 
    #platform:
    #   nodesize: 28
@@ -255,12 +255,12 @@ A more complex configuration
    laboratory: /short/fp0/mxw900/cosima
    repeat: True
 
-   collate: true
-   collate_walltime: 4:00:00
-   collate_mem: 30GB
-   collate_ncpus: 4
-   collate_queue: express
-   collate_flags: -n4 -z -m -r
+   collate:
+       walltime: 4:00:00
+       mem: 30GB
+       ncpus: 4
+       queue: express
+       flags: -n4 -z -m -r
 
    # Model configuration
    model: access
@@ -281,8 +281,8 @@ A more complex configuration
          model: mom
          exe: mom
          input:
-               - mom
-               # - iaf-sw21d
+             - mom
+             # - iaf-sw21d
          ncpus: 960
 
        - name: ice
@@ -291,13 +291,11 @@ A more complex configuration
          input: cice
          ncpus: 192
 
-
    calendar:
        runtime:
            years: 0
            months: 0
            days: 30
-
        start:
            year: 1
            month: 1
@@ -309,13 +307,66 @@ A more complex configuration
        SCOREP_MPI_ENABLE_GROUPS: all
        SCOREP_METRIC_RUSAGE: all
 
-(Note: Slightly out of date)
+(Note: Slightly out of date!)
 
 
 Configuring your experiment
 ---------------------------
 
-TODO
+=========   ===============   ==============
+Config      Description       Default
+=========   ===============   ==============
+``model``   Model type        -
+``name``    Experiment name   Expt directory
+``exe``     Queue job name    Executable
+``input``   Time request      Model inputs
+=========   ===============   ==============
+
+Paths can be absolute or relative to the lab
+
+Inputs can support files or directories
+
+
+Scheduler configuration
+-----------------------
+
+============   ==============    ============
+Config         Description       Default
+============   ==============    ============
+``queue``      PBS Queue         ``normal``
+``project``    SU Account        ``$PROJECT``
+``jobname``    Queue job name    Expt dir
+``walltime``   Time request      (From PBS)
+``ncpus``      CPU request       1
+``mem``        RAM request       Max node mem
+============   ==============    ============
+
+``qsub_flags`` for everything else
+
+
+.. CPU requests
+   ------------
+
+   Normally ``ncpus`` will increase itself to match the node, but more control is
+   available.
+
+   +----------+---------------+---------+
+   | Config   | Description   | Default |
+   +----------+---------------+---------+
+   | platform                           |
+   +----------+---------------+---------+
+   | nodesize | CPUs per node | 16      |
+   +----------+---------------+---------+
+   | nodemem  | RAM per node  | 32      |
+   +----------+---------------+---------+
+   | ncpureq  | Override NCPU | (None)  |
+   +----------+---------------+---------+
+
+   npernode    CPUs per node     (
+
+   ``jobfs``
+   ``priority``
+   ``join``       Merge stdout/err  ``n``
 
 
 The work directory
@@ -362,9 +413,7 @@ TODO: Change something, run, and then ``git log``.
 GitHub integration
 ------------------
 
-Sync your experiment on GitHub
-
-.. code:: sh
+Sync your experiment on GitHub::
 
    payu ghsetup
    payu push
