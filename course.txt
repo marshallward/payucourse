@@ -93,14 +93,14 @@ Using an experiment
 
 Clone an existing experiment (usually in ``$HOME``):
 
-.. code::
+.. code:: sh
 
    cd $HOME
    mkdir -p mom
    cd mom
    git clone /short/public/mxw900/payucourse/expt/bowl1
 
-This is the *control directory* for ``bowl1``
+This is the "*control directory*" for ``bowl1``
 
 
 Run the experiment
@@ -108,12 +108,14 @@ Run the experiment
 
 This job is pre-configured, run it!
 
-.. code::
+.. code:: sh
 
    cd bowl1
    payu run
 
-Model will run in ``work`` and saved to ``archive``
+* Model will run in ``work/``
+
+* Output saved to saved to ``archive/``
 
 
 Your experiment
@@ -134,8 +136,8 @@ Your model (MOM) configuration files:
 * ``field_table``
 
 
-Inside your experiment
-----------------------
+Experiment Configuration
+------------------------
 
 .. code:: yaml
 
@@ -175,15 +177,15 @@ To clear ``work/`` and save PBS logs::
 
    payu sweep
 
-To delete everything::
+The completely delete the experiment::
 
    payu sweep --hard
 
 This wipes output, restarts, and logs! (``archive/$expt``)
 
 
-Payu Structure
-==============
+Anatomy of an Experiment
+========================
 
 Control vs Laboratory
 ---------------------
@@ -200,17 +202,13 @@ You "control" the laboratory externally
 Laboratory overview
 -------------------
 
-General structure of the laboratory:
-
-* ``archive``
-
-* ``bin``
-
-* ``codebase`` (sometimes)
-
-* ``input``
-
-* ``work``
+============   ===============================
+``archive``    Experiment output and restarts
+``bin``        Model executables
+``codebase``   Model Source code repository
+``input``      Static input files
+``work``       Ongoing (or failed) experiments
+============   ===============================
 
 
 Feature overview
