@@ -2,10 +2,8 @@
 Payu
 ====
 
+:subtitle: A climate model workflow manager
 :author: Marshall Ward
-:organization:
-   - National Computational Infrastructure
-   - CMS alumnus
 :description: A Payu training course
 :date: 3 October 2018
 

@@ -8,7 +8,10 @@ FLAGS=-s \
 	  --slide-level=2 \
 	  -V revealjs-url=./reveal.js \
 	  -V theme=${THEME} \
-	  --template=default.revealjs
+	  -V slideNumber=true \
+	  --template=default.revealjs \
+	  --no-highlight
+	  #--highlight-style=zenburn 
 
 all: course.html reveal.js
 

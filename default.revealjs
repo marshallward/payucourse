@@ -36,6 +36,8 @@ $if(theme)$
 $else$
   <link rel="stylesheet" href="$revealjs-url$/css/theme/black.css" id="theme">
 $endif$
+  <!-- Explicitly add zenburn for highlight support -->
+  <link rel="stylesheet" href="$revealjs-url$/lib/css/zenburn.css" id="theme">
 $for(css)$
   <link rel="stylesheet" href="$css$"/>
 $endfor$
@@ -77,18 +79,24 @@ $endfor$
 
 $if(title)$
 <section id="$idprefix$title-slide">
+  <div class="reveal" style="text-align: right;">
+    <img src="img/nci_logo.png"
+         style="background: none; border: none; box-shadow: none;
+         width: 30%"
+         alt="NCI">
+  </div>
   <h1 class="title">$title$</h1>
 $if(subtitle)$
-  <p class="subtitle">$subtitle$</p>
+  <p class="subtitle" style="text-align: left;">$subtitle$</p>
 $endif$
 $for(author)$
-  <p class="author">$author$</p>
+  <p class="author" style="text-align: right;">$author$</p>
 $endfor$
 $for(organization)$
-  <p class="organization">$organization$</p>
+  <p class="organization" style="text-align: right;">$organization$</p>
 $endfor$
 $if(date)$
-  <p class="date">$date$</p>
+  <p class="date" style="text-align: right;">$date$</p>
 $endif$
 </section>
 $endif$
@@ -283,6 +291,13 @@ $endif$
 $if(mathjax)$
           { src: '$revealjs-url$/plugin/math/math.js', async: true },
 $endif$
+          { src: './reveal.js/plugin/highlight/highlight.js',
+            async: true,
+            condition: function() {
+              return !!document.querySelector( 'pre code' ); },
+            callback: function() {
+              hljs.initHighlightingOnLoad(); }
+          },
           { src: '$revealjs-url$/plugin/notes/notes.js', async: true }
         ]
       });
