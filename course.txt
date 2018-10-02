@@ -488,6 +488,8 @@ From ``mom.err``::
 
 Errors are saved to ``archive/error_logs`` with PBS job IDs.
 
+(Note: Error logs can get big fast!)
+
 
 GitHub integration
 ------------------
