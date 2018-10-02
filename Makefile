@@ -1,8 +1,13 @@
 URL=http://lab.hakim.se/reveal-js
 REPO=https://github.com/hakimel/reveal.js/archive/master.zip
-FLAGS=-s --highlight-style=zenburn -f rst -t revealjs -V revealjs-url=./reveal.js
-#FLAGS=-s -f rst -t revealjs -V revealjs-url=./reveal.js
-THEME=black
+THEME=sky
+#FLAGS=-f rst -t revealjs -V revealjs-url=./reveal.js
+#FLAGS=-s --highlight-style=zenburn -f rst -t revealjs -V revealjs-url=./reveal.js
+FLAGS=-s \
+	  -f rst -t revealjs \
+	  --slide-level=2 \
+	  -V revealjs-url=./reveal.js \
+	  -V theme=${THEME}
 
 all: course.html reveal.js
 
@@ -12,7 +17,7 @@ reveal.js:
 	mv reveal.js-master reveal.js
 
 course.html: course.txt
-	pandoc ${FLAGS} -V theme=${THEME} $^ -o $@
+	pandoc ${FLAGS} $^ -o $@
 
 clean:
 	rm -f course.html 

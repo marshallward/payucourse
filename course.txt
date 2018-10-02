@@ -1,5 +1,5 @@
 ====
-PAYU
+Payu
 ====
 
 :author: Marshall Ward
@@ -10,9 +10,8 @@ PAYU
 What is Payu?
 =============
 
-
 Etymology
-=========
+---------
 
 * *P*\ ython on v\ *AYU*
 
@@ -22,7 +21,7 @@ Etymology
 
 
 Motivation
-==========
+----------
 
 Long ago, we managed many, many jobscripts.
 
@@ -36,7 +35,7 @@ Juggling and sharing scripts was becoming a problem!
 
 
 Prehistoric Payu
-================
+----------------
 
 .. code:: python
 
@@ -79,8 +78,11 @@ Prehistoric Payu
    (Check: Do we automatically create this?)
 
 
-Using a pre-existing experiment
-===============================
+Using Payu
+==========
+
+Using an experiment
+-------------------
 
 Clone an existing experiment (usually in ``$HOME``):
 
@@ -95,7 +97,7 @@ This is the *control directory* for ``bowl1``
 
 
 Run the experiment
-==================
+------------------
 
 This job is pre-configured, run it!
 
@@ -108,7 +110,7 @@ Model will run in ``work`` and saved to ``archive``
 
 
 Your experiment
-===============
+---------------
 
 Your Payu configuration file:
 
@@ -126,7 +128,7 @@ Your model (MOM) configuration files:
 
 
 Inside your experiment
-======================
+----------------------
 
 .. code:: yaml
 
@@ -141,35 +143,28 @@ Inside your experiment
    model: mom
    input: /short/public/mxw900/payucourse/input/bowl1
    exe: /short/public/mxw900/payucourse/bin/mom51_solo_default
-
-   # Config
    collate: False
 
 
 Inspecting the output
-=====================
+---------------------
 
-Check your model output (and errors):
+Model stdout, stderr
+   ``mom.out``, ``mom.err``
 
-* ``mom.out``, ``mom.err``
+Scheduler logs
+   ``bowl1.o####``, ``bowl1.e####``
 
-PBS logs are also stored::
+Model output in ``archive/``
+   ``output000``, ``restart000``
 
-* ``bowl1.o####``, ``bowl1.e####``
-
-Model output is archived here:
-
-* ``archive/output000``
-
-* ``archive/restart000``
-
-Default: every 5th restart is saved, and any inbetween
+.. Every 5th restart is saved, and any inbetween
 
 
 Cleaning up
-===========
+-----------
 
-.. code::
+To clear ``work/`` and save PBS logs::
 
    payu sweep
 
@@ -177,19 +172,26 @@ To delete everything::
 
    payu sweep --hard
 
-This wipes output, restarts, and logs
+This wipes output, restarts, and logs! (``archive/$expt``)
 
 
-Multiple runs
-=============
+Payu Structure
+==============
 
-.. code::
+Control vs Laboratory
+---------------------
 
-   payu run -n 5
+Control path: ``${HOME}/mom/bowl1``
+   User-configured (text) input
+
+Laboratory: ``/short/$PROJECT/$USER/$MODEL/``
+   Executables, data input, output, etc.
+
+You "control" the laboratory externally
 
 
 Laboratory overview
-===================
+-------------------
 
 General structure of the laboratory:
 
@@ -204,11 +206,50 @@ General structure of the laboratory:
 * ``work``
 
 
-Supported models
+Feature overview
 ================
+
+Multiple runs
+-------------
+
+.. code::
+
+   payu run -n 5
+
+
+Experiment tracking
+-------------------
+
+TODO: Change something, run, and then ``git log``.
+
+
+GitHub integration
+------------------
+
+Sync your experiment on GitHub
+
+.. code:: sh
+
+   payu ghsetup
+   payu push
+
+(Warning: Probably going to rename ``push``...)
+
+
+Supported models
+----------------
 
 To see the supported models::
 
    payu list
 
 Although support can't always be guaranteed...
+
+
+Coupled Models
+==============
+
+ACCESS-OM2
+----------
+
+TODO
