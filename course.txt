@@ -606,13 +606,41 @@ If you see this error in your PBS log::
 
 then it means the model crashed and payu has halted execution.
 
-Don't blame payu!!
+Check your error logs to figure out the problem.
+
+
+Various Python errors
+---------------------
+
+Sometimes a missing file or misconfigured experiment will cause an error in
+Python::
+
+   Traceback (most recent call last):
+     File "/home/157/mxw157/python/payu/bin/payu", line 8, in <module>
+       cli.parse()
+     File "/home/157/mxw157/python/payu/payu/cli.py", line 61, in parse
+       run_cmd(**args)
+     File "/home/157/mxw157/python/payu/payu/subcommands/setup_cmd.py", line 18, in runcmd
+       expt.setup(force_archive=force_archive)
+     File "/home/157/mxw157/python/payu/payu/experiment.py", line 353, in setup
+       model.setup()
+     File "/home/157/mxw157/python/payu/payu/models/mom.py", line 69, in setup
+       super(Mom, self).setup()
+     File "/home/157/mxw157/python/payu/payu/models/model.py", line 151, in setup
+       shutil.copy(f_path, self.work_path)
+     File "/apps/python/2.7.6/lib/python2.7/shutil.py", line 119, in copy
+       copyfile(src, dst)
+     File "/apps/python/2.7.6/lib/python2.7/shutil.py", line 82, in copyfile
+       with open(src, 'rb') as fsrc:
+   IOError: [Errno 2] No such file or directory: '/home/157/mxw157/mom/course/bowl2_course/input.nml'
+
+Run ``payu setup`` and test that the experiment is set up properly.
 
 
 "Please send me your job script"
 --------------------------------
 
-We don't have a "job script"...
+NCI will often request a job script, which is a challenge because we don't one!
 
-... but, NCI is starting to understand, and CMS is prepared to run
+... but, NCI is starting to understand, and CMS is usually prepared to run
 interference.
