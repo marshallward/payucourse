@@ -384,7 +384,28 @@ This will create your ``work/`` directory in the lab
 Inside the work directory
 -------------------------
 
-TODO
+.. notes::
+	I don't know what `log` is, maybe Nic does?
+
+Inspect the symbolic link to ``work`` and its contents::
+
+   work/
+   |-- INPUT
+   |   |-- gotmturb.inp -> /short/fp0/mxw900/real_mom/input/bowl1/gotmturb.inp
+   |   |-- grid_spec.nc -> /short/fp0/mxw900/real_mom/input/bowl1/grid_spec.nc
+   |   `-- ocean_temp_salt.res.nc -> /short/fp0/mxw900/real_mom/input/bowl1/ocean_temp_salt.res.nc
+   |-- RESTART
+   |-- config.yaml
+   |-- data_table
+   |-- diag_table
+   |-- field_table
+   |-- input.nml
+   `-- log
+
+
+Your config files are copied, and sometimes modified.
+
+Your input data is symlinked.
 
 
 Feature overview
@@ -406,6 +427,44 @@ To change the rate::
    restart_freq: 1
 
 
+MPI support
+-----------
+
+MPI support is very explicit at the moment:
+
+.. notes::
+   We used to rely on NCI wrapper scripts to fix the MPI module, but they have
+   moved away from this feature.  So for now, we usually have to explicitly set
+   the MPI module.
+
+   Also, these particular settings are nonsense together, they're just various
+   examples.
+
+.. code:: yaml
+
+   mpi:
+       module: openmpi/2.1.1-debug
+       modulepath: /home/157/mxw157/modules
+       flags:
+          - -mca orte_output_filename log
+          - -mca pml yalla
+       runcmd: map --profile mpiexec
+
+Currently you must match your module to the executable, but we have some
+disabled code to automatically fix the MPI module.
+
+
+Environment variables
+---------------------
+
+You can configure environment variables, with some basic variable
+substitution.
+
+.. code:: yaml
+
+   TODO
+
+
 Userscript support
 ------------------
 
@@ -419,6 +478,9 @@ Subcommands and scripts can be injected after key steps
       run: 'qsub postprocess.sh'
 
    postscript: cleanup.sh
+
+These will run after the prescribed section.  ``postscript`` runs after
+collation.
 
 
 Supported models
@@ -535,9 +597,22 @@ TODO
 Troubleshooting
 ===============
 
+Model crashes
+-------------
+
+If you see this error in your PBS log::
+
+   payu: Model exited with error code 134; aborting."
+
+then it means the model crashed and payu has halted execution.
+
+Don't blame payu!!
+
+
 "Please send me your job script"
 --------------------------------
 
 We don't have a "job script"...
 
-... but, NCI is starting to understand, and CMS is prepared to run interference
+... but, NCI is starting to understand, and CMS is prepared to run
+interference.
