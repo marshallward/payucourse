@@ -437,6 +437,9 @@ Forking and sharing experiments
 Creating a new experiment
 -------------------------
 
+.. notes::
+   Sharing experiments is new, but we are working on improving this experience
+
 Let's have some **FUN** and increase the timestep::
 
    cd ../mom   # Or whatever
