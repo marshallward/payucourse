@@ -637,6 +637,18 @@ Python::
 Run ``payu setup`` and test that the experiment is set up properly.
 
 
+Cloning issues
+--------------
+
+Many ``config.yaml`` contain relative paths for inputs and executables, which
+can make sharing difficult!
+
+Either copy (or symlink) their files into your local lab, or modify your
+``config.yaml`` to use absolute paths.
+
+On the developer end, we are thinking of better solutions here...
+
+
 "Please send me your job script"
 --------------------------------
 
