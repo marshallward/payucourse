@@ -400,7 +400,7 @@ Inspect the symbolic link to ``work`` and its contents::
    |-- INPUT
    |   |-- gotmturb.inp -> /short/fp0/mxw900/real_mom/input/bowl1/gotmturb.inp
    |   |-- grid_spec.nc -> /short/fp0/mxw900/real_mom/input/bowl1/grid_spec.nc
-   |   `-- ocean_temp_salt.res.nc -> /short/fp0/mxw900/real_mom/input/bowl1/ocean_temp_salt.res.nc
+   |   `-- ocean_temp_salt.res.nc -> /short/fp0/mxw900/real_mom/input/...
    |-- RESTART
    |-- config.yaml
    |-- data_table
@@ -420,6 +420,9 @@ Feature overview
 
 Multiple runs
 -------------
+
+.. notes::
+   This is useful for crazy people who do analysis on restart files.
 
 To do multiple runs in sequence:
 
@@ -575,6 +578,9 @@ Errors are saved to ``archive/error_logs`` with PBS job IDs.
 GitHub integration
 ------------------
 
+.. notes::
+   Here, show off git remote as well as the .ssh directory
+
 You can sync your experiment on GitHub::
 
    payu ghsetup
@@ -582,7 +588,7 @@ You can sync your experiment on GitHub::
 
 Visit your experiment in GitHub!
 
-(Warning: Probably going to rename ``push``...)
+NOTE: This will create SSH keys in your ``$HOME/.ssh`` directory.
 
 
 Other GitHub features
@@ -591,9 +597,25 @@ Other GitHub features
 .. notes::
    Remember to do a bit of a tech demo to mxw900-raijin here.
 
-You can also save jobs to an organization::
+   The unmentioned features are:
+      * name (on github)
+      * username
+      * sshid (ssh key path)
+      * private
+      * remote name (payu)
 
-   organization: mxw900-raijin
+You should set a description for your run:
+
+.. code:: yaml
+
+   description: A very fun experiment
+
+You can also save jobs to an organization:
+
+.. code:: yaml
+
+   runlog:
+      organization: mxw900-raijin
 
 There are few other features here, and someday may be documented!
 
