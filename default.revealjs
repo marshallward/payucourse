@@ -58,6 +58,7 @@ $endif$
 $for(header-includes)$
   $header-includes$
 $endfor$
+  <base href="http://marshallward.org/payucourse/index.html">
 </head>
 <body>
 $for(include-before)$

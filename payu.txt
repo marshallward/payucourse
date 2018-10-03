@@ -789,7 +789,7 @@ Paul Spence suffered through the earliest version of Payu, and helped mold it
 into a usable application.
 
 Nic Hannah and Aidan Heerdegen have been top-level contributors and maintainers
-of various pieces for a very long time.
+for a very long time.
 
 Thank you!!
 
