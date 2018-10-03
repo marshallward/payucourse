@@ -16,6 +16,7 @@ reveal.js:
 	wget -N ${REPO}
 	unzip master.zip
 	mv reveal.js-master reveal.js
+	cp nci.css reveal.js/css/theme/
 
 course.html: course.txt
 	pandoc ${FLAGS} $^ -o $@
