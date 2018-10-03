@@ -45,6 +45,10 @@ Juggling and sharing scripts was becoming a problem!
 Prehistoric Payu
 ----------------
 
+.. notes::
+   There were even older versions which looked like bash scripts written in
+   Python, which are so terrible that they're not even worth sharing.
+
 .. code:: python
 
    from payu import gold
@@ -85,7 +89,7 @@ Run the experiment
 
 Use the system payu::
 
-   module load payu
+   module load payu/0.9.2
 
 This job is pre-configured, run it!
 
