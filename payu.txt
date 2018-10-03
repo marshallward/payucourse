@@ -682,7 +682,7 @@ Inputs, work and output are separated by the ``name``::
    |-- sync_output_to_gdata.sh
    `-- sync_restarts_to_gdata.sh
 
-Common files (``accessom2.nml``, ``namcouple``) lie outside the coupler.
+Common files (``accessom2.nml``, ``namcouple``) are in the top directory.
 
 Work directories have a similar structure.
 
