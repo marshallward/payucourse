@@ -24,6 +24,13 @@ Etymology
 Motivation
 ----------
 
+.. notes::
+   Not only were we using scripts for all of our models, but we also were using
+   more and more variations of scripts for various tasks.
+
+   Version control had not quite caught on yet, but I don't think it would have
+   addressed our problems anyway.
+
 Long ago, we managed many, many jobscripts.
 
 Many kinds of scripts:
@@ -36,6 +43,15 @@ Juggling and sharing scripts was becoming a problem!
 
 
 ----
+
+.. notes::
+   Andy Hogg is probably the progenitor of Payu.  As Python became more popular
+   in the group and we started using it for non-scientific tasks, Andy asked me
+   why we don't just use Python for everything?
+
+   I probably took this suggestion too literally.
+
+   Here is a picture of Andy doing some important scientific computing.
 
 .. image:: img/andy_at_nci.png
 
@@ -433,8 +449,8 @@ MPI support is very explicit at the moment:
           - -mca pml yalla
        runcmd: map --profile mpiexec
 
-Currently you must match your module to the executable, but we have some
-disabled code to automatically fix the MPI module.
+Sometimes the NCI wrappers will adjust the module to match the executable, but
+it's generally a good idea to set it correctly here.
 
 
 Userscript support
@@ -544,11 +560,10 @@ Visit your experiment in GitHub!
 Other GitHub features
 ---------------------
 
-To disable the runlog::
+.. notes::
+   Remember to do a bit of a tech demo to mxw900-raijin here.
 
-   runlog: False
-
-Or to save the jobs to an organization::
+You can also save jobs to an organization::
 
    organization: mxw900-raijin
 
