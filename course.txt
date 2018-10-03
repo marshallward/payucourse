@@ -323,7 +323,7 @@ Config      Description       Default
 ``input``   Model inputs      -
 =========   ===============   ==============
 
-Paths can be absolute or relative to the $LAB
+Paths can be absolute or relative to the lab path
 
 
 Scheduler configuration
@@ -575,10 +575,66 @@ Currently "``payu push``" is manual, but we could make it automatic.
 Coupled Models
 ==============
 
-ACCESS-OM2
-----------
+Coupled configuration
+---------------------
 
-TODO
+Yes, Payu supports coupled models!
+
+.. code:: yaml
+
+   model: access-om2
+   input: /short/public/access-om2/input_38570c62/common_01deg_jra55
+   submodels:
+       - name: atmosphere
+         model: yatm
+         exe: libom2/yatm_impi.exe
+         input: /short/public/access-om2/input_38570c62/yatm_01deg
+         ncpus: 1
+
+       - name: ocean
+         model: mom
+         exe: libom2/fms_ACCESS-OM_impi.x
+         input: /short/public/access-om2/input_38570c62/mom_01deg
+         ncpus: 4358
+
+       - name: ice
+         model: cice5
+         exe: libom2/cice_auscom_3600x2700_2000p_impi.exe
+         input: /short/public/access-om2/input_38570c62/cice_01deg
+         ncpus: 2000
+
+
+Layout of a coupled model
+-------------------------
+
+Inputs, work and output are separated by the ``name``::
+
+   libom2_1deg
+   |-- accessom2.nml
+   |-- archive -> /short/fp0/mxw900/access-om2/archive/libom2_1deg
+   |-- atmosphere
+   |   |-- atm.nml
+   |   |-- checksums.txt
+   |   `-- forcing.json
+   |-- config.yaml
+   |-- ice
+   |   |-- cice_in.nml
+   |   |-- input_ice.nml
+   |   |-- input_ice_gfdl.nml
+   |   `-- input_ice_monin.nml
+   |-- namcouple
+   |-- ocean
+   |   |-- checksums.txt
+   |   |-- data_table
+   |   |-- diag_table
+   |   |-- field_table
+   |   `-- input.nml
+   |-- sync_output_to_gdata.sh
+   `-- sync_restarts_to_gdata.sh
+
+Common files (``accessom2.nml``, ``namcouple``) lie outside the coupler.
+
+Work directories have a similar structure.
 
 
 Troubleshooting
@@ -654,7 +710,7 @@ What does Payu do?
 
 * Common interface for many models
 
-* Manages your input files, executables, outputs, and restarts
+* Manages your inputs, executables, outputs, and restarts
 
 * Tracks changes to your experiment
 
