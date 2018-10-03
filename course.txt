@@ -343,23 +343,31 @@ Config         Description       Default
 ``qsub_flags`` for everything else
 
 
-.. CPU requests
-   ------------
+CPU requests
+------------
 
-   Normally ``ncpus`` will increase itself to match the node, but more control is
-   available.
+Normally ``ncpus`` will increase itself to match the node, but more control is
+available:
 
-   +----------+---------------+---------+
-   | Config   | Description   | Default |
-   +----------+---------------+---------+
-   | platform                           |
-   +----------+---------------+---------+
-   | nodesize | CPUs per node | 16      |
-   +----------+---------------+---------+
-   | nodemem  | RAM per node  | 32      |
-   +----------+---------------+---------+
-   | ncpureq  | Override NCPU | (None)  |
-   +----------+---------------+---------+
++-----------+-------------+---------+
+| Config    | Description | Default |
++-----------+-------------+---------+
+| platform                          |
++-----------+-------------+---------+
+| →nodesize | Node CPUs   | 16      |
++-----------+-------------+---------+
+| →nodemem  | Node RAM    | 32 (GB) |
++-----------+-------------+---------+
+
+This is currently required to use the Broadwell nodes:
+
+.. code:: yaml
+
+   platform:
+      nodesize: 28
+      nodemem: 128
+
+.. others
 
    npernode    CPUs per node     (
 
@@ -424,6 +432,26 @@ We save every output, and every 5th restart.
 To change the rate::
 
    restart_freq: 1
+
+
+Path control
+------------
+
+.. notes::
+   Just about every path can be explicitly set, though at some point it does
+   get a bit weird to, say, change the control path...
+
+Default paths can be set explicitly
+
+==============    ===================
+``shortpath``     Root ("short") path
+``laboratory``    Laboratory path
+``experiment``    Experiment path
+``control``       Control path
+==============    ===================
+
+Suppose you want to run out of ``x77`` but be changed under ``e14``?  Set the
+``shortpath``!
 
 
 MPI support
