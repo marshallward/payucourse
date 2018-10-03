@@ -620,7 +620,8 @@ On the developer end, we are thinking of better solutions here...
 "Please send me your job script"
 --------------------------------
 
-NCI will often request a job script, which is a challenge because we don't one!
+NCI will often request a job script, which is a challenge because we don't have
+one!
 
 ... but, NCI is starting to understand, and CMS is usually prepared to run
 interference.
