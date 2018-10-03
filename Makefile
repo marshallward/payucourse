@@ -10,7 +10,7 @@ FLAGS=-s \
 	  --template=default.revealjs \
 	  --no-highlight
 
-all: payu.html reveal.js
+all: index.html reveal.js
 
 reveal.js:
 	wget -N ${REPO}
@@ -18,8 +18,8 @@ reveal.js:
 	mv reveal.js-master reveal.js
 	cp nci.css reveal.js/css/theme/
 
-payu.html: payu.txt
+index.html: payu.txt
 	pandoc ${FLAGS} $^ -o $@
 
 clean:
-	rm -f course.html 
+	rm -f index.html 
