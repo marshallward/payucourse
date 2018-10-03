@@ -617,7 +617,7 @@ You can also save jobs to an organization:
    runlog:
       organization: mxw900-raijin
 
-There are few other features here, and someday may be documented!
+There are a few other features here, and someday they may be documented!
 
 Currently "``payu push``" is manual, but we could make it automatic.
 
