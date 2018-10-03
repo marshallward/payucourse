@@ -772,16 +772,21 @@ What does Payu do?
 Special Thanks
 --------------
 
-.. columns::
+.. |paul| image:: img/paul.jpg
 
-   .. column::
+.. |nic| image:: img/nic.jpeg
 
-      .. image:: img/nic.jpeg
-         :width: 42%
+.. |aidan| image:: img/aidan.jpeg
 
-   .. column::
+.. table::
+   :widths: 20 18 20
 
-      .. image:: img/aidan.jpeg
+   +--------+-------+---------+
+   | |paul| | |nic| | |aidan| |
+   +--------+-------+---------+
+
+Paul Spence suffered through the earliest version of Payu, and helped mold it
+into a usable application.
 
 Nic Hannah and Aidan Heerdegen have been top-level contributors and maintainers
 of various pieces for a very long time.
