@@ -608,7 +608,7 @@ Restarts    ``manifests/restarts.yaml``
 How is it tracked?
 ------------------
 
-* Uses `yamanifest <https://github.com/aidanheerdegen/yamanifest>`
+* Uses `yamanifest <https://github.com/aidanheerdegen/yamanifest>`_
 * Creates a manifest file which uses ``YAML`` format
 * Each file (symlink) in ``work`` is a dictionary key in manifest file 
 * Manifests are tracked as part of the version control system (git), so the unique hash 
