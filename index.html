@@ -63,7 +63,32 @@
 <section>
 <section id="what-is-payu" class="title-slide slide level1">
 <h1>What is Payu?</h1>
-
+<p>Payu is a climate model workflow manager</p>
+<p>It is open source, the code is available on GitHub</p>
+<p><a href="https://github.com/payu-org/payu">https://github.com/payu-org/payu</a></p>
+<p>and there is full documentation</p>
+<p><a href="https://payu.readthedocs.io/en/latest/">https://payu.readthedocs.io/en/latest/</a></p>
+</section>
+<section id="what-is-a-climate-model-workflow-manager" class="slide level2">
+<h2>What is a climate model workflow manager?</h2>
+<p>That means it runs your model for you. In short:</p>
+<ul>
+<li>Setup model run directory (<code>work</code>)</li>
+<li>Run the model</li>
+<li>Move outputs/restarts to <code>archive</code> directory</li>
+<li>Clean up the run directory</li>
+<li>Run again (if instructed to do so)</li>
+</ul>
+</section>
+<section id="features" class="slide level2">
+<h2>Features</h2>
+<ul>
+<li>Simple YAML based configuration</li>
+<li>Full version control of experimental configuration using git</li>
+<li>Hash based versioning of all model inputs and executables</li>
+<li>Supports many models: MOM5, MOM6, ACCESS-OM, ACCESS-ESM, Gold, MITgcm, Nemo, Qgcm, CICE4, CICE5, WaveWatch</li>
+<li>Driver based architecture allows support for other models to be added</li>
+</ul>
 </section>
 <section id="etymology" class="slide level2">
 <h2>Etymology</h2>
@@ -88,12 +113,12 @@
 <dd><p>MOM, MITgcm, Q-GCM, ACCESS, ...</p>
 </dd>
 </dl>
-<p>Juggling and sharing scripts was becoming a problem!</p>
+<p>Juggling and sharing scripts was becoming a problem. Many of steps were duplicated between different scripts for the various models. Payu is an attempt to generalise the task of running a model.</p>
 </section>
 <section class="slide level2">
 
 <aside class="notes">
-<p>Andy Hogg is probably the progenitor of Payu. As Python became more popular in the group and we started using it for non-scientific tasks, Andy asked me why we don't just use Python for everything?</p>
+<p>Andy Hogg is probably the progenitor of Payu. As Python became more popular in the group we started using it for non-scientific tasks, Andy asked me why we don't just use Python for everything?</p>
 <p>I probably took this suggestion too literally.</p>
 <p>Here is a picture of Andy doing some important scientific computing.</p>
 </aside>
@@ -122,14 +147,11 @@ if __name__ == &#39;__main__&#39;:
 <section>
 <section id="using-payu" class="title-slide slide level1">
 <h1>Using Payu</h1>
-
-</section>
-<section id="using-an-experiment" class="slide level2">
-<h2>Using an experiment</h2>
-<p>Clone an existing experiment (usually in <code>$HOME</code>):</p>
+<p>Cloning an experiment -------------------</p>
+<p>Clone an existing experiment (usually in a subdirectory in <code>$HOME</code>):</p>
 <pre class="sh"><code>cd $HOME
-mkdir -p mom
-cd mom
+mkdir -p payu/mom
+cd payu/mom
 git clone https://github.com/payu-org/bowl1.git</code></pre>
 <p>This is the "<em>control directory</em>" for <code>bowl1</code></p>
 </section>
@@ -138,11 +160,11 @@ git clone https://github.com/payu-org/bowl1.git</code></pre>
 <p>Load the CMS conda environment containing payu:</p>
 <pre><code>module use /g/data3/hh5/modules
 module load conda</code></pre>
-<p>This job is pre-configured, run it!</p>
+<p>This job is pre-configured, so can just run it!</p>
 <pre class="sh"><code>cd bowl1
 payu run</code></pre>
 <ul>
-<li>Model will run in <code>work/</code></li>
+<li>Model will run in <code>work/</code> (an ephemeral directory just for that model run)</li>
 <li>Output saved to <code>archive/</code></li>
 </ul>
 </section>
@@ -265,86 +287,6 @@ collate: False</code></pre>
 </table>
 <p>"<code>payu init -m mom</code>" will create these directories</p>
 </section>
-<section id="a-simple-configuration" class="slide level2">
-<h2>A simple configuration</h2>
-<p>We use the YAML format</p>
-<pre class="yaml"><code>model: mom6
-name: om4_gm_test
-
-queue: normal
-jobname: mom6_om4
-walltime: 20:00
-ncpus: 960
-mem: 1500GB
-
-exe: mom6_intel17
-input:
-    - om4_grid
-    - om4_atm</code></pre>
-<p>Most variables have "sensible" defaults</p>
-</section>
-<section id="a-more-complex-configuration" class="slide level2">
-<h2>A more complex configuration</h2>
-<pre class="yaml"><code># PBS configuration
-queue: normal
-project: fp0
-walltime: 02:30:00
-jobname: om2_jra55
-ncpus: 1153
-mem: 2000GB
-
-#platform:
-#   nodesize: 28
-
-laboratory: /scratch/fp0/mxw900/cosima
-repeat: True
-
-collate:
-    walltime: 4:00:00
-    mem: 30GB
-    ncpus: 4
-    queue: express
-    flags: -n4 -z -m -r
-
-# Model configuration
-model: access
-submodels:
-    - name: coupler
-      model: oasis
-      input: oasis_025
-      ncpus: 0
-
-    - name: atmosphere
-      model: matm
-      exe: matm
-      #input: jra55-0.8_025
-      input: /scratch/v45/mxw900/cosima/nc64
-      ncpus: 1
-
-    - name: ocean
-      model: mom
-      exe: mom
-      input:
-          - mom
-          # - iaf-sw21d
-      ncpus: 960
-
-    - name: ice
-      model: cice
-      exe: cice_nohalo
-      input: cice
-      ncpus: 192
-
-calendar:
-    runtime:
-        years: 0
-        months: 0
-        days: 30
-    start:
-        year: 1
-        month: 1
-        days: 1</code></pre>
-</section>
 <section id="configuring-your-experiment" class="slide level2">
 <h2>Configuring your experiment</h2>
 <table>
@@ -428,11 +370,11 @@ calendar:
 <section id="cpu-requests" class="slide level2">
 <h2>CPU requests</h2>
 <p>Normally <code>ncpus</code> will increase itself to match the node, but more control is available:</p>
-<table style="width:50%;">
+<table style="width:51%;">
 <colgroup>
 <col style="width: 16%" />
 <col style="width: 19%" />
-<col style="width: 13%" />
+<col style="width: 15%" />
 </colgroup>
 <tbody>
 <tr class="odd">
@@ -448,12 +390,12 @@ calendar:
 <tr class="odd">
 <td>→nodesize</td>
 <td>Node CPUs</td>
-<td>16</td>
+<td>32</td>
 </tr>
 <tr class="even">
 <td>→nodemem</td>
 <td>Node RAM</td>
-<td>32 (GB)</td>
+<td>128 (GB)</td>
 </tr>
 </tbody>
 </table>
@@ -464,30 +406,126 @@ calendar:
 </section>
 <section id="the-work-directory" class="slide level2">
 <h2>The work directory</h2>
-<p>Run the following to inspect (and test) your run:</p>
+<p>Run the following to inspect (and test) the setup of your run:</p>
 <pre class="sh"><code>payu setup</code></pre>
 <p>This will create your <code>work/</code> directory in the lab.</p>
+<aside class="notes">
+<p>This is the first step once a model run begins, but it is exposed separately to allow testing all input and executable paths are correct without having to actually run the model.</p>
+<p>By default payu will not submit a job if there is an existing <code>work/</code> directory. After running <code>payu setup</code> you must run <code>payu sweep</code> or use the <code>-f</code> option to run the model <code>payu run -f</code></p>
+</aside>
 </section>
 <section id="inside-the-work-directory" class="slide level2">
 <h2>Inside the work directory</h2>
-<aside class="notes">
-<p>I don't know what <span class="title-ref">log</span> is, maybe Nic does?</p>
-</aside>
 <p>Inspect the symbolic link to <code>work</code> and its contents:</p>
-<pre><code>work/
-|-- INPUT
-|   |-- gotmturb.inp -&gt; /scratch/v45/mxw900/real_mom/input/bowl1/gotmturb.inp
-|   |-- grid_spec.nc -&gt; /scratch/fp0/mxw900/real_mom/input/bowl1/grid_spec.nc
-|   `-- ocean_temp_salt.res.nc -&gt; /scratch/fp0/mxw900/real_mom/input/...
-|-- RESTART
-|-- config.yaml
-|-- data_table
-|-- diag_table
-|-- field_table
-|-- input.nml
-`-- log</code></pre>
+<pre><code>work
+├── config.yaml
+├── data_table
+├── diag_table
+├── field_table
+├── INPUT
+│   ├── gotmturb.inp -&gt; /g/data/hh5/tmp/mom-test/input/bowl1/gotmturb.inp
+│   ├── grid_spec.nc -&gt; /g/data/hh5/tmp/mom-test/input/bowl1/grid_spec.nc
+│   ├── ocean_barotropic.res.nc -&gt; /scratch/w97/aph502/mom/archive/bowl1/restart000/ocean_barotropic.res.nc
+│   ├── ocean_bih_friction.res.nc -&gt; /scratch/w97/aph502/mom/archive/bowl1/restart000/ocean_bih_friction.res.nc
+│   ├── ocean_density.res.nc -&gt; /scratch/w97/aph502/mom/archive/bowl1/restart000/ocean_density.res.nc
+│   ├── ocean_pot_temp.res.nc -&gt; /scratch/w97/aph502/mom/archive/bowl1/restart000/ocean_pot_temp.res.nc
+│   ├── ocean_sbc.res.nc -&gt; /scratch/w97/aph502/mom/archive/bowl1/restart000/ocean_sbc.res.nc
+│   ├── ocean_solo.res -&gt; /scratch/w97/aph502/mom/archive/bowl1/restart000/ocean_solo.res
+│   ├── ocean_temp_salt.res.nc -&gt; /scratch/w97/aph502/mom/archive/bowl1/restart000/ocean_temp_salt.res.nc
+│   ├── ocean_thickness.res.nc -&gt; /scratch/w97/aph502/mom/archive/bowl1/restart000/ocean_thickness.res.nc
+│   ├── ocean_tracer.res -&gt; /scratch/w97/aph502/mom/archive/bowl1/restart000/ocean_tracer.res
+│   ├── ocean_velocity_advection.res.nc -&gt; /scratch/w97/aph502/mom/archive/bowl1/restart000/ocean_velocity_advection.res.nc
+│   └── ocean_velocity.res.nc -&gt; /scratch/w97/aph502/mom/archive/bowl1/restart000/ocean_velocity.res.nc
+├── input.nml
+├── log
+├── manifests
+│   ├── exe.yaml
+│   ├── input.yaml
+│   └── restart.yaml
+├── mom51_solo_default -&gt; /g/data/hh5/tmp/mom-test/bin/mom51_solo_default
+└── RESTART</code></pre>
 <p>Your config files are copied, and sometimes modified.</p>
 <p>Your input data is symlinked.</p>
+</section>
+<section id="a-simple-configuration" class="slide level2">
+<h2>A simple configuration</h2>
+<p>We use the YAML format</p>
+<pre class="yaml"><code>model: mom6
+name: om4_gm_test
+
+queue: normal
+jobname: mom6_om4
+walltime: 20:00
+ncpus: 960
+mem: 1500GB
+
+exe: mom6_intel17
+input:
+    - om4_grid
+    - om4_atm</code></pre>
+<p>Most variables have "sensible" defaults</p>
+</section>
+<section id="a-more-complex-configuration" class="slide level2">
+<h2>A more complex configuration</h2>
+<pre class="yaml"><code># PBS configuration
+queue: normal
+project: fp0
+walltime: 02:30:00
+jobname: om2_jra55
+ncpus: 1153
+mem: 2000GB
+
+#platform:
+#   nodesize: 28
+
+laboratory: /scratch/fp0/mxw900/cosima
+repeat: True
+
+collate:
+    walltime: 4:00:00
+    mem: 30GB
+    ncpus: 4
+    queue: express
+    flags: -n4 -z -m -r
+
+# Model configuration
+model: access
+submodels:
+    - name: coupler
+      model: oasis
+      input: oasis_025
+      ncpus: 0
+
+    - name: atmosphere
+      model: matm
+      exe: matm
+      #input: jra55-0.8_025
+      input: /scratch/v45/mxw900/cosima/nc64
+      ncpus: 1
+
+    - name: ocean
+      model: mom
+      exe: mom
+      input:
+          - mom
+          # - iaf-sw21d
+      ncpus: 960
+
+    - name: ice
+      model: cice
+      exe: cice_nohalo
+      input: cice
+      ncpus: 192
+
+calendar:
+    runtime:
+        years: 0
+        months: 0
+        days: 30
+    start:
+        year: 1
+        month: 1
+        days: 1</code></pre>
 </section></section>
 <section>
 <section id="feature-overview" class="title-slide slide level1">
@@ -497,13 +535,16 @@ calendar:
 <section id="multiple-runs" class="slide level2">
 <h2>Multiple runs</h2>
 <aside class="notes">
-<p>This is useful for crazy people who do analysis on restart files.</p>
+<p>This does not affect the total number of runs which is goverened entirely by the value passed to the <code>-n</code> option.</p>
 </aside>
 <p>To do multiple runs in sequence:</p>
 <pre class=""><code>payu run -n 20</code></pre>
 <p>We save every output, and every 5th restart.</p>
-<p>To change the rate:</p>
+<p>To change the rate restart files are saved:</p>
 <pre><code>restart_freq: 1</code></pre>
+<p>To run the model multiple times for each submission to the queue:</p>
+<pre><code>runspersub: 5</code></pre>
+<p>will run the model 5 times during each queued job. Can help reduce overhead spent waiting in queue</p>
 </section>
 <section id="path-control" class="slide level2">
 <h2>Path control</h2>
@@ -531,7 +572,7 @@ calendar:
 </tr>
 </tbody>
 </table>
-<p>Suppose you have run out of time on one project so need it to be charged under another project, but all your output files (laboratory) is under the first project? Just specify <code>shortpath</code> to the original project code!</p>
+<p>Suppose you have run out of time on one project so need it to be charged under another project, but all your output files (laboratory) is under the first project? Just specify <code>shortpath</code> to be the default path of the original project code</p>
 </section>
 <section id="mpi-support" class="slide level2">
 <h2>MPI support</h2>
@@ -547,6 +588,7 @@ calendar:
        - -mca orte_output_filename log
        - -mca pml yalla
     runcmd: map --profile mpiexec</code></pre>
+<p>It is not recommended to change these without understanding and good reason</p>
 </section>
 <section id="userscript-support" class="slide level2">
 <h2>Userscript support</h2>
@@ -557,13 +599,90 @@ calendar:
    run: &#39;qsub postprocess.sh&#39;
 
 postscript: sync_output_to_gdata.sh</code></pre>
-<p>These will run after the prescribed section. <code>postscript</code> runs after collation.</p>
+<p>These will run after the prescribed section. <code>postscript</code> runs when a run finishes, if the output is collated it runs after that completes.</p>
 </section>
 <section id="supported-models" class="slide level2">
 <h2>Supported models</h2>
 <p>To see the supported models:</p>
 <pre><code>payu list</code></pre>
 <p>But expect some atrophy...</p>
+</section>
+<section id="file-tracking" class="slide level2">
+<h2>File Tracking</h2>
+<aside class="notes">
+<p>Very early in this job, there was a "dodgy aerosol file" that had been used in some simulations, but hard/impossible to say which runs/files were affected</p>
+</aside>
+<ul>
+<li>Track input files used for each model run</li>
+<li>Completely automatic. User intervention not required</li>
+<li>Reproducibly re-run previous experiment</li>
+<li>Share experiments more easily as input files all specified</li>
+<li>Flexibility with specifying path to input files</li>
+<li>Identify all runs using specified file (possible future feature)</li>
+</ul>
+</section>
+<section id="what-is-tracked" class="slide level2">
+<h2>What is tracked?</h2>
+<aside class="notes">
+<p>Executables and inputs are not expected to change. Can specify a flag to either warn if they do and stop, or update manifest and continue</p>
+<p>Restarts are the opposite, and by default are always expected to be different for each run, unless a flag is specified to reproduce a run, in which case any difference will flag an error and stop</p>
+</aside>
+<table>
+<tbody>
+<tr class="odd">
+<td>Executables</td>
+<td><code>manifests/exe.yaml</code></td>
+</tr>
+<tr class="even">
+<td>Inputs</td>
+<td><code>manifests/inputs.yaml</code></td>
+</tr>
+<tr class="odd">
+<td>Restarts</td>
+<td><code>manifests/restarts.yaml</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="how-is-it-tracked" class="slide level2">
+<h2>How is it tracked?</h2>
+<ul>
+<li>Uses yamanifest</li>
+<li>Creates a <code>YaML</code> file</li>
+<li>Each file (symlink) in <code>work</code> is dictionary key</li>
+<li>Manifests are tracked as part of the version control system (git), so the unique hash for every tracked file is associated with each run using version control</li>
+</ul>
+</section>
+<section id="example" class="slide level2">
+<h2>Example</h2>
+<aside class="notes">
+<p>Note there is a header and a version string, can ignore All files in work are either config files (which are tracked by git) or symbolic links to files elsewhere on filesystem Issues with getting this working has to do with enforcing this for all models - can be difficult with hardwired paths etc</p>
+</aside>
+<ul>
+<li><code>fullpath</code> is the actual location of the file</li>
+<li>The hashes uniquely identify file</li>
+</ul>
+<pre class="yaml"><code>format: yamanifest
+version: 1.0
+---
+work/mom51_solo_default:
+   fullpath: /g/data/hh5/tmp/mom-test/bin/mom51_solo_default
+   hashes:
+      binhash: 423d9cf92c887fe3145c727c4fbda4d0
+      md5: 989580773079ede1109b292c2bb2ad17</code></pre>
+</section>
+<section id="hierachy-of-hashes" class="slide level2">
+<h2>Hierachy of hashes</h2>
+<aside class="notes">
+<p>binhash uses datestamp and size combined with first 100MB of a file. Not guaranteed unique, but likely to detect if the file has changed</p>
+</aside>
+<ul>
+<li>yamanifest supports multiple hashes =&gt; hierachy of hashes</li>
+<li>Unique hashes (md5, sha128) take too long on large files</li>
+<li>Fast hashing to check for file changes</li>
+<li>Use unique hash check when necessary</li>
+<li>Running <code>payu setup</code> for experiments with large number and size of input files can be useful, will precalculate expensive hashes saving time when job runs on queue</li>
+</ul>
 </section></section>
 <section>
 <section id="forking-and-sharing-experiments" class="title-slide slide level1">
