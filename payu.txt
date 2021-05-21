@@ -3,22 +3,55 @@ Payu
 ====
 
 :subtitle: A climate model workflow manager
-:author: Marshall Ward
+:author: Marshall Ward and Aidan Heerdegen
 :description: A Payu training course
-:date: 3 October 2018
+:date: 18 October 2020
 
 
 What is Payu?
 =============
+
+Payu is a climate model workflow manager
+
+It is open source, the code is available on GitHub
+
+https://github.com/payu-org/payu
+
+and there is full documentation
+
+https://payu.readthedocs.io/en/latest/
+
+
+What is a climate model workflow manager?
+-----------------------------------------
+
+That means it runs your model for you. In short:
+
+* Setup model run directory (``work``)
+* Run the model
+* Move outputs/restarts to ``archive`` directory
+* Clean up the run directory
+* Run again (if instructed to do so)
+
+
+Features
+--------
+
+* Simple YAML based configuration
+* Full version control of experimental configuration using git
+* Hash based versioning of all model inputs and executables
+* Supports many models: MOM5, MOM6, ACCESS-OM, ACCESS-ESM, Gold, MITgcm, Nemo, Qgcm, CICE4, CICE5, WaveWatch
+* Driver based architecture allows support for other models to be added
+
 
 Etymology
 ---------
 
 * *P*\ ython on v\ *AYU*
 
-  Vayu was Raijin's predecessor and has passed away...
+  Vayu was Gadi's two times antecedent and though it has passed away...
 
-  ...but Payu lives on!
+  ...Payu lives on!
 
 
 Motivation
@@ -39,14 +72,16 @@ Many kinds of scripts:
 Many different models:
    MOM, MITgcm, Q-GCM, ACCESS, ...
 
-Juggling and sharing scripts was becoming a problem!
+Juggling and sharing scripts was becoming a problem. Many of steps were duplicated
+between different scripts for the various models. Payu is an attempt to generalise
+the task of running a model. 
 
 
 ----
 
 .. notes::
    Andy Hogg is probably the progenitor of Payu.  As Python became more popular
-   in the group and we started using it for non-scientific tasks, Andy asked me
+   in the group we started using it for non-scientific tasks, Andy asked me
    why we don't just use Python for everything?
 
    I probably took this suggestion too literally.
@@ -85,17 +120,17 @@ Prehistoric Payu
 Using Payu
 ==========
 
-Using an experiment
+Cloning an experiment
 -------------------
 
-Clone an existing experiment (usually in ``$HOME``):
+Clone an existing experiment (usually in a subdirectory in ``$HOME``):
 
 .. code:: sh
 
    cd $HOME
-   mkdir -p mom
-   cd mom
-   git clone /short/public/mxw900/payucourse/expt/bowl1
+   mkdir -p payu/mom
+   cd payu/mom
+   git clone https://github.com/payu-org/bowl1.git
 
 This is the "*control directory*" for ``bowl1``
 
@@ -103,18 +138,19 @@ This is the "*control directory*" for ``bowl1``
 Run the experiment
 ------------------
 
-Use the system payu::
+Load the CMS conda environment containing payu::
 
-   module load payu/0.9.2
+   module use /g/data3/hh5/modules
+   module load conda
 
-This job is pre-configured, run it!
+This job is pre-configured, so can just run it!
 
 .. code:: sh
 
    cd bowl1
    payu run
 
-* Model will run in ``work/``
+* Model will run in ``work/`` (an ephemeral directory just for that model run)
 
 * Output saved to ``archive/``
 
@@ -142,18 +178,20 @@ Experiment Configuration
 
 .. code:: yaml
 
-   # PBS
-   queue: express
-   ncpus: 4
-   walltime: 0:10:00
-   mem: 1GB
-   jobname: bowl1
-
-   # Model
-   model: mom
-   input: /short/public/mxw900/payucourse/input/bowl1
-   exe: /short/public/mxw900/payucourse/bin/mom51_solo_default
-   collate: False
+    # PBS
+    queue: express
+    ncpus: 4
+    walltime: 0:10:00
+    mem: 1GB
+    jobname: bowl1
+    
+    # Model
+    model: mom
+    input: /g/data/hh5/tmp/mom-test/input/bowl1
+    exe: /g/data/hh5/tmp/mom-test/bin/mom51_solo_default
+    
+    # Config
+    collate: False
 
 
 Inspecting the output
@@ -166,6 +204,7 @@ Inspecting the output
 ``bowl1.e${jobid}``     PBS (payu) error
 ``archive/output000``   Model output files
 ``archive/restart000``  Restart (pickup) files
+``manifests``           Manifest files for tracking experiment input and executable files
 ======================  ======================
 
 
@@ -192,7 +231,7 @@ Control vs Laboratory
 Control path: ``${HOME}/mom/bowl1``
    User-configured (text) input
 
-Laboratory: ``/short/$PROJECT/$USER/$MODEL/``
+Laboratory: ``/scratch/$PROJECT/$USER/$MODEL/``
    Executables, data input, output, etc.
 
 You "control" the laboratory externally
@@ -211,7 +250,129 @@ Laboratory overview
 
 "``payu init -m mom``" will create these directories
 
-(But usually not necessary)
+
+Configuring your experiment
+---------------------------
+
+=========   ===============   ==============
+Config      Description       Default
+=========   ===============   ==============
+``model``   Model type        (required!)
+``name``    Experiment name   Expt directory
+``exe``     Executable        Set by driver
+``input``   Model inputs      -
+=========   ===============   ==============
+
+Paths can be absolute or relative to the lab path
+
+
+Scheduler configuration
+-----------------------
+
+============   ==============    ============
+Config         Description       Default
+============   ==============    ============
+``queue``      PBS Queue         ``normal``
+``project``    SU Account        ``$PROJECT``
+``jobname``    Queue job name    ``name``
+``walltime``   Time request      (From PBS)
+``ncpus``      CPU request       1
+``mem``        RAM request       Max node mem
+============   ==============    ============
+
+``qsub_flags`` for everything else
+
+
+CPU requests
+------------
+
+Normally ``ncpus`` will increase itself to match the node, but more control is
+available:
+
++-----------+-------------+----------+
+| Config    | Description | Default  |
++-----------+-------------+----------+
+| platform                           |
++-----------+-------------+----------+
+| →nodesize | Node CPUs   | 32       |
++-----------+-------------+----------+
+| →nodemem  | Node RAM    | 128 (GB) |
++-----------+-------------+----------+
+
+This is currently required to use the Broadwell nodes:
+
+.. code:: yaml
+
+   platform:
+      nodesize: 28
+      nodemem: 128
+
+.. others
+
+   npernode    CPUs per node     (
+
+   ``jobfs``
+   ``priority``
+   ``join``       Merge stdout/err  ``n``
+
+
+The work directory
+------------------
+
+Run the following to inspect (and test) the setup of your run:
+
+.. code:: sh
+
+   payu setup
+
+This will create your ``work/`` directory in the lab. 
+
+.. notes::
+
+   This is the first step once a model run begins, but it is exposed separately to allow 
+   testing all input and executable paths are correct without having to actually run the model. 
+
+   By default payu will not submit a job if there is an existing ``work/`` directory. After running
+   ``payu setup`` you must run ``payu sweep`` or use the ``-f`` option to run the model ``payu run -f``
+
+
+Inside the work directory
+-------------------------
+
+
+Inspect the symbolic link to ``work`` and its contents::
+
+   work
+   ├── config.yaml
+   ├── data_table
+   ├── diag_table
+   ├── field_table
+   ├── INPUT
+   │   ├── gotmturb.inp -> /g/data/hh5/tmp/mom-test/input/bowl1/gotmturb.inp
+   │   ├── grid_spec.nc -> /g/data/hh5/tmp/mom-test/input/bowl1/grid_spec.nc
+   │   ├── ocean_barotropic.res.nc -> /scratch/w97/aph502/mom/archive/bowl1/restart000/ocean_barotropic.res.nc
+   │   ├── ocean_bih_friction.res.nc -> /scratch/w97/aph502/mom/archive/bowl1/restart000/ocean_bih_friction.res.nc
+   │   ├── ocean_density.res.nc -> /scratch/w97/aph502/mom/archive/bowl1/restart000/ocean_density.res.nc
+   │   ├── ocean_pot_temp.res.nc -> /scratch/w97/aph502/mom/archive/bowl1/restart000/ocean_pot_temp.res.nc
+   │   ├── ocean_sbc.res.nc -> /scratch/w97/aph502/mom/archive/bowl1/restart000/ocean_sbc.res.nc
+   │   ├── ocean_solo.res -> /scratch/w97/aph502/mom/archive/bowl1/restart000/ocean_solo.res
+   │   ├── ocean_temp_salt.res.nc -> /scratch/w97/aph502/mom/archive/bowl1/restart000/ocean_temp_salt.res.nc
+   │   ├── ocean_thickness.res.nc -> /scratch/w97/aph502/mom/archive/bowl1/restart000/ocean_thickness.res.nc
+   │   ├── ocean_tracer.res -> /scratch/w97/aph502/mom/archive/bowl1/restart000/ocean_tracer.res
+   │   ├── ocean_velocity_advection.res.nc -> /scratch/w97/aph502/mom/archive/bowl1/restart000/ocean_velocity_advection.res.nc
+   │   └── ocean_velocity.res.nc -> /scratch/w97/aph502/mom/archive/bowl1/restart000/ocean_velocity.res.nc
+   ├── input.nml
+   ├── log
+   ├── manifests
+   │   ├── exe.yaml
+   │   ├── input.yaml
+   │   └── restart.yaml
+   ├── mom51_solo_default -> /g/data/hh5/tmp/mom-test/bin/mom51_solo_default
+   └── RESTART
+
+Your config files are copied, and sometimes modified.
+
+Your input data is symlinked.
 
 A simple configuration
 ----------------------
@@ -253,7 +414,7 @@ A more complex configuration
    #platform:
    #   nodesize: 28
 
-   laboratory: /short/fp0/mxw900/cosima
+   laboratory: /scratch/fp0/mxw900/cosima
    repeat: True
 
    collate:
@@ -275,7 +436,7 @@ A more complex configuration
          model: matm
          exe: matm
          #input: jra55-0.8_025
-         input: /short/v45/mxw900/cosima/nc64
+         input: /scratch/v45/mxw900/cosima/nc64
          ncpus: 1
 
        - name: ocean
@@ -302,117 +463,6 @@ A more complex configuration
            month: 1
            days: 1
 
-   # Misc
-   env:
-       SCOREP_TOTAL_MEMORY: 1073741824
-       SCOREP_MPI_ENABLE_GROUPS: all
-       SCOREP_METRIC_RUSAGE: all
-
-(Note: Slightly out of date!)
-
-
-Configuring your experiment
----------------------------
-
-=========   ===============   ==============
-Config      Description       Default
-=========   ===============   ==============
-``model``   Model type        (required!)
-``name``    Experiment name   Expt directory
-``exe``     Executable        Set by driver
-``input``   Model inputs      -
-=========   ===============   ==============
-
-Paths can be absolute or relative to the lab path
-
-
-Scheduler configuration
------------------------
-
-============   ==============    ============
-Config         Description       Default
-============   ==============    ============
-``queue``      PBS Queue         ``normal``
-``project``    SU Account        ``$PROJECT``
-``jobname``    Queue job name    ``name``
-``walltime``   Time request      (From PBS)
-``ncpus``      CPU request       1
-``mem``        RAM request       Max node mem
-============   ==============    ============
-
-``qsub_flags`` for everything else
-
-
-CPU requests
-------------
-
-Normally ``ncpus`` will increase itself to match the node, but more control is
-available:
-
-+-----------+-------------+---------+
-| Config    | Description | Default |
-+-----------+-------------+---------+
-| platform                          |
-+-----------+-------------+---------+
-| →nodesize | Node CPUs   | 16      |
-+-----------+-------------+---------+
-| →nodemem  | Node RAM    | 32 (GB) |
-+-----------+-------------+---------+
-
-This is currently required to use the Broadwell nodes:
-
-.. code:: yaml
-
-   platform:
-      nodesize: 28
-      nodemem: 128
-
-.. others
-
-   npernode    CPUs per node     (
-
-   ``jobfs``
-   ``priority``
-   ``join``       Merge stdout/err  ``n``
-
-
-The work directory
-------------------
-
-Run the following to inspect (and test) your run:
-
-.. code:: sh
-
-   payu setup
-
-This will create your ``work/`` directory in the lab
-
-
-Inside the work directory
--------------------------
-
-.. notes::
-	I don't know what `log` is, maybe Nic does?
-
-Inspect the symbolic link to ``work`` and its contents::
-
-   work/
-   |-- INPUT
-   |   |-- gotmturb.inp -> /short/fp0/mxw900/real_mom/input/bowl1/gotmturb.inp
-   |   |-- grid_spec.nc -> /short/fp0/mxw900/real_mom/input/bowl1/grid_spec.nc
-   |   `-- ocean_temp_salt.res.nc -> /short/fp0/mxw900/real_mom/input/...
-   |-- RESTART
-   |-- config.yaml
-   |-- data_table
-   |-- diag_table
-   |-- field_table
-   |-- input.nml
-   `-- log
-
-
-Your config files are copied, and sometimes modified.
-
-Your input data is symlinked.
 
 
 Feature overview
@@ -422,7 +472,8 @@ Multiple runs
 -------------
 
 .. notes::
-   This is useful for crazy people who do analysis on restart files.
+   This does not affect the total number of runs which is goverened entirely by the value passed
+   to the ``-n`` option.
 
 To do multiple runs in sequence:
 
@@ -432,10 +483,15 @@ To do multiple runs in sequence:
 
 We save every output, and every 5th restart.
 
-To change the rate::
+To change the rate restart files are saved::
 
    restart_freq: 1
 
+To run the model multiple times for each submission to the queue::
+
+   runspersub: 5
+
+will run the model 5 times during each queued job. Can help reduce overhead spent waiting in queue
 
 Path control
 ------------
@@ -447,14 +503,15 @@ Path control
 Default paths can be set explicitly
 
 ==============    ===================
-``shortpath``     Root ("short") path
+``shortpath``     Root ("scratch") path
 ``laboratory``    Laboratory path
 ``experiment``    Experiment path
 ``control``       Control path
 ==============    ===================
 
-Suppose you want to run out of ``x77`` but be changed under ``e14``?  Set the
-``shortpath``!
+Suppose you have run out of time on one project so need it to be charged under another
+project, but all your output files (laboratory) is under the first project? Just specify
+``shortpath`` to be the default path of the original project code
 
 
 MPI support
@@ -463,12 +520,11 @@ MPI support
 MPI support is very explicit at the moment:
 
 .. notes::
-   We used to rely on NCI wrapper scripts to fix the MPI module, but they have
-   moved away from this feature.  So for now, we usually have to explicitly set
-   the MPI module.
+   We rely on NCI wrapper scripts to fix the MPI module.
 
    Also, these particular settings are nonsense together, they're just various
-   examples.
+   examples. Usually do not set an explicit mpi module, this is done automatically
+   by the ``mpirun`` script.
 
 .. code:: yaml
 
@@ -480,9 +536,7 @@ MPI support is very explicit at the moment:
           - -mca pml yalla
        runcmd: map --profile mpiexec
 
-Sometimes the NCI wrappers will adjust the module to match the executable, but
-it's generally a good idea to set it correctly here.
-
+It is not recommended to change these without understanding and good reason
 
 Userscript support
 ------------------
@@ -498,8 +552,8 @@ Subcommands and scripts can be injected after key steps
 
    postscript: sync_output_to_gdata.sh
 
-These will run after the prescribed section.  ``postscript`` runs after
-collation.
+These will run after the prescribed section.  ``postscript`` runs when a run
+finishes, if the output is collated it runs after that completes.
 
 
 Supported models
@@ -510,6 +564,88 @@ To see the supported models::
    payu list
 
 But expect some atrophy...
+
+
+File Tracking
+-------------
+
+.. notes:: 
+     Very early in this job, there was a "dodgy aerosol file" that had
+         been used in some simulations, but hard/impossible to say which
+         runs/files were affected
+
+* Track input files used for each model run
+* Completely automatic. User intervention not required
+* Reproducibly re-run previous experiment
+* Share experiments more easily as input files all specified
+* Flexibility with specifying path to input files
+* Identify all runs using specified file (possible future feature)
+
+What is tracked?
+----------------
+
+.. notes:: 
+   Executables and inputs are not expected to change. Can specify a flag to either warn 
+   if they do and stop, or update manifest and continue
+   
+   Restarts are the opposite, and by default are always expected to be different for each
+   run, unless a flag is specified to reproduce a run, in which case any difference will
+   flag an error and stop
+
+=========== ===================
+Executables ``manifests/exe.yaml``
+Inputs      ``manifests/inputs.yaml``    
+Restarts    ``manifests/restarts.yaml``
+=========== ===================
+
+
+How is it tracked?
+------------------
+
+* Uses yamanifest 
+* Creates a ``YaML`` file 
+* Each file (symlink) in ``work`` is dictionary key 
+* Manifests are tracked as part of the version control system (git), so the unique hash 
+  for every tracked file is associated with each run using version control
+
+Example
+-------
+
+.. notes:: 
+   Note there is a header and a version string, can ignore
+   All files in work are either config files (which are tracked
+     by git) or symbolic links to files elsewhere on filesystem
+   Issues with getting this working has to do with enforcing this
+     for all models - can be difficult with hardwired paths etc
+     
+* ``fullpath`` is the actual location of the file 
+* The hashes uniquely identify file
+
+.. code::yaml
+
+   format: yamanifest
+   version: 1.0
+   ---
+   work/mom51_solo_default:
+      fullpath: /g/data/hh5/tmp/mom-test/bin/mom51_solo_default
+      hashes:
+         binhash: 423d9cf92c887fe3145c727c4fbda4d0
+         md5: 989580773079ede1109b292c2bb2ad17
+
+
+Hierachy of hashes
+------------------
+
+.. notes:: 
+   binhash uses datestamp and size combined with first 100MB of a file.
+   Not guaranteed unique, but likely to detect if the file has changed
+
+* yamanifest supports multiple hashes => hierachy of hashes
+* Unique hashes (md5, sha128) take too long on large files
+* Fast hashing to check for file changes
+* Use unique hash check when necessary
+* Running ``payu setup`` for experiments with large number and size of input files
+  can be useful, will precalculate expensive hashes saving time when job runs on queue
 
 
 Forking and sharing experiments
@@ -529,10 +665,8 @@ Let's have some **FUN** and increase the timestep::
 
 We are in a hurry, so let's make ``dt_ocean`` in ``input.nml`` very large::
 
-   f90nml -g ocean_model_nml -v dt_ocean=86400 input.nml > tmp.nml
-   mv tmp.nml input.nml
-
-(Or use a text editor)
+    &ocean_model_nml
+        dt_ocean = 86400
 
 
 Recording your progress
@@ -630,29 +764,42 @@ Coupled configuration
 
 Yes, Payu supports coupled models!
 
+https://github.com/COSIMA/01deg_jra55_iaf
+
 .. code:: yaml
 
-   model: access-om2
-   input: /short/public/access-om2/input_38570c62/common_01deg_jra55
-   submodels:
-       - name: atmosphere
-         model: yatm
-         exe: libom2/yatm_impi.exe
-         input: /short/public/access-om2/input_38570c62/yatm_01deg
-         ncpus: 1
-
-       - name: ocean
-         model: mom
-         exe: libom2/fms_ACCESS-OM_impi.x
-         input: /short/public/access-om2/input_38570c62/mom_01deg
-         ncpus: 4358
-
-       - name: ice
-         model: cice5
-         exe: libom2/cice_auscom_3600x2700_2000p_impi.exe
-         input: /short/public/access-om2/input_38570c62/cice_01deg
-         ncpus: 2000
-
+    model: access-om2
+    input: /g/data/ik11/inputs/access-om2/input_08022019/common_01deg_jra55
+    submodels:
+        - name: atmosphere
+          model: yatm
+          exe: /g/data/ik11/inputs/access-om2/bin/yatm_4198e150.exe
+          input:
+                - /g/data/ik11/inputs/access-om2/input_08022019/yatm_01deg
+                - /g/data/qv56/replicas/input4MIPs/CMIP6/OMIP/MRI/MRI-JRA55-do-1-4-0/atmos/3hr/rsds/gr/v20190429
+                - /g/data/qv56/replicas/input4MIPs/CMIP6/OMIP/MRI/MRI-JRA55-do-1-4-0/atmos/3hr/rlds/gr/v20190429
+                - /g/data/qv56/replicas/input4MIPs/CMIP6/OMIP/MRI/MRI-JRA55-do-1-4-0/atmos/3hr/prra/gr/v20190429
+                - /g/data/qv56/replicas/input4MIPs/CMIP6/OMIP/MRI/MRI-JRA55-do-1-4-0/atmos/3hr/prsn/gr/v20190429
+                - /g/data/qv56/replicas/input4MIPs/CMIP6/OMIP/MRI/MRI-JRA55-do-1-4-0/atmos/3hrPt/psl/gr/v20190429
+                - /g/data/qv56/replicas/input4MIPs/CMIP6/OMIP/MRI/MRI-JRA55-do-1-4-0/land/day/friver/gr/v20190429
+                - /g/data/qv56/replicas/input4MIPs/CMIP6/OMIP/MRI/MRI-JRA55-do-1-4-0/atmos/3hrPt/tas/gr/v20190429
+                - /g/data/qv56/replicas/input4MIPs/CMIP6/OMIP/MRI/MRI-JRA55-do-1-4-0/atmos/3hrPt/huss/gr/v20190429
+                - /g/data/qv56/replicas/input4MIPs/CMIP6/OMIP/MRI/MRI-JRA55-do-1-4-0/atmos/3hrPt/uas/gr/v20190429
+                - /g/data/qv56/replicas/input4MIPs/CMIP6/OMIP/MRI/MRI-JRA55-do-1-4-0/atmos/3hrPt/vas/gr/v20190429
+                - /g/data/qv56/replicas/input4MIPs/CMIP6/OMIP/MRI/MRI-JRA55-do-1-4-0/landIce/day/licalvf/gr/v20190429
+          ncpus: 1
+    
+        - name: ocean
+          model: mom
+          exe: /g/data/ik11/inputs/access-om2/bin/fms_ACCESS-OM_e837d05d_libaccessom2_4198e150.x
+          input: /g/data/ik11/inputs/access-om2/input_08022019/mom_01deg
+          ncpus: 4358
+    
+        - name: ice
+          model: cice5
+          exe: /g/data/ik11/inputs/access-om2/bin/cice_auscom_3600x2700_722p_597e4561_libaccessom2_4198e150.exe
+          input: /g/data/ik11/inputs/access-om2/input_20200422/cice_01deg
+          ncpus: 799
 
 Layout of a coupled model
 -------------------------
@@ -661,7 +808,7 @@ Inputs, work and output are separated by the ``name``::
 
    libom2_1deg
    |-- accessom2.nml
-   |-- archive -> /short/fp0/mxw900/access-om2/archive/libom2_1deg
+   |-- archive -> /scratch/fp0/mxw900/access-om2/archive/libom2_1deg
    |-- atmosphere
    |   |-- atm.nml
    |   |-- checksums.txt
