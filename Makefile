@@ -16,7 +16,7 @@ reveal.js:
 	wget -N ${REPO}
 	unzip master.zip
 	mv reveal.js-master reveal.js
-	cp cp smallsky.css reveal.js/css/theme/
+	cp smallsky.css reveal.js/css/theme/
 
 index.html: payu.txt
 	pandoc ${FLAGS} $^ -o $@
