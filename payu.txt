@@ -11,13 +11,18 @@ Payu
 What is Payu?
 =============
 
+
 Payu is a climate model workflow manager
+
 
 It is open source, the code is available on GitHub
 
+
 https://github.com/payu-org/payu
 
+
 and there is full documentation
+
 
 https://payu.readthedocs.io/en/latest/
 
@@ -40,7 +45,7 @@ Features
 * Simple YAML based configuration
 * Full version control of experimental configuration using git
 * Hash based versioning of all model inputs and executables
-* Supports many models: MOM5, MOM6, ACCESS-OM, ACCESS-ESM, Gold, MITgcm, Nemo, Qgcm, CICE4, CICE5, WaveWatch
+* Supports many models: MOM5, MOM6, ACCESS-OM, ACCESS-ESM, MITgcm, CICE4, CICE5, Qgcm ...
 * Driver based architecture allows support for other models to be added
 
 
@@ -121,7 +126,7 @@ Using Payu
 ==========
 
 Cloning an experiment
--------------------
+---------------------
 
 Clone an existing experiment (usually in a subdirectory in ``$HOME``):
 
@@ -140,7 +145,7 @@ Run the experiment
 
 Load the CMS conda environment containing payu::
 
-   module use /g/data3/hh5/modules
+   module use /g/data3/hh5/public/modules
    module load conda
 
 This job is pre-configured, so can just run it!
@@ -204,7 +209,7 @@ Inspecting the output
 ``bowl1.e${jobid}``     PBS (payu) error
 ``archive/output000``   Model output files
 ``archive/restart000``  Restart (pickup) files
-``manifests``           Manifest files for tracking experiment input and executable files
+``manifests``           Manifest files for tracking executables and inputs
 ======================  ======================
 
 
@@ -299,6 +304,9 @@ available:
 | →nodemem  | Node RAM    | 128 (GB) |
 +-----------+-------------+----------+
 
+
+-------------
+
 This is currently required to use the Broadwell nodes:
 
 .. code:: yaml
@@ -325,7 +333,8 @@ Run the following to inspect (and test) the setup of your run:
 
    payu setup
 
-This will create your ``work/`` directory in the lab. 
+This will create your ``work`` directory in the laboratory and a symbolic link
+to it in your control directory. 
 
 .. notes::
 
@@ -338,7 +347,6 @@ This will create your ``work/`` directory in the lab.
 
 Inside the work directory
 -------------------------
-
 
 Inspect the symbolic link to ``work`` and its contents::
 
@@ -370,14 +378,12 @@ Inspect the symbolic link to ``work`` and its contents::
    ├── mom51_solo_default -> /g/data/hh5/tmp/mom-test/bin/mom51_solo_default
    └── RESTART
 
-Your config files are copied, and sometimes modified.
-
-Your input data is symlinked.
+Your config files are copied, and sometimes modified. Your input data is symlinked.
 
 A simple configuration
 ----------------------
 
-We use the YAML format
+The configuration file (``config.yaml``) uses the YAML format
 
 .. code:: yaml
 
@@ -602,9 +608,9 @@ Restarts    ``manifests/restarts.yaml``
 How is it tracked?
 ------------------
 
-* Uses yamanifest 
-* Creates a ``YaML`` file 
-* Each file (symlink) in ``work`` is dictionary key 
+* Uses `yamanifest <https://github.com/aidanheerdegen/yamanifest>`
+* Creates a manifest file which uses ``YAML`` format
+* Each file (symlink) in ``work`` is a dictionary key in manifest file 
 * Manifests are tracked as part of the version control system (git), so the unique hash 
   for every tracked file is associated with each run using version control
 
@@ -640,12 +646,12 @@ Hierachy of hashes
    binhash uses datestamp and size combined with first 100MB of a file.
    Not guaranteed unique, but likely to detect if the file has changed
 
-* yamanifest supports multiple hashes => hierachy of hashes
+* yamanifest supports multiple hashes => hierarchy of hashes
 * Unique hashes (md5, sha128) take too long on large files
 * Fast hashing to check for file changes
 * Use unique hash check when necessary
 * Running ``payu setup`` for experiments with large number and size of input files
-  can be useful, will precalculate expensive hashes saving time when job runs on queue
+  can be useful: precalculate expensive hashes saves time when job runs on queue
 
 
 Forking and sharing experiments
@@ -659,7 +665,6 @@ Creating a new experiment
 
 Let's have some **FUN** and increase the timestep::
 
-   cd ../mom   # Or whatever
    git clone bowl1 bowl2
    cd bowl2
 
@@ -672,7 +677,7 @@ We are in a hurry, so let's make ``dt_ocean`` in ``input.nml`` very large::
 Recording your progress
 -----------------------
 
-Track your changes to the run::
+See changes to the run by utilising ``git``::
 
    git log
 
@@ -696,7 +701,8 @@ Your run crashed!!!
 Inspecting failed jobs
 ----------------------
 
-Failed jobs retain ``mom.out``, ``mom.err``, and ``work/``.
+Failed jobs retain output and error files (``mom.out``, ``mom.err`` in this case), and 
+a ``work/`` directory
 
 From ``mom.err``::
 
@@ -704,7 +710,7 @@ From ``mom.err``::
 
    forrtl: error (78): process killed (SIGTERM)
 
-Errors are saved to ``archive/error_logs`` with PBS job IDs.
+Errors are saved to ``archive/error_logs`` with PBS job IDs
 
 (Note: Error logs can get big fast!)
 
@@ -887,16 +893,6 @@ Either copy (or symlink) their files into your local lab, or modify your
 ``config.yaml`` to use absolute paths.
 
 On the developer end, we are thinking of better solutions here...
-
-
-"Please send me your job script"
---------------------------------
-
-NCI will often request a job script, which is a challenge because we don't have
-one!
-
-... but, NCI is starting to understand, and CMS is usually prepared to run
-interference.
 
 
 Summary

@@ -16,7 +16,7 @@
       span.underline{text-decoration: underline;}
       div.column{display: inline-block; vertical-align: top; width: 50%;}
   </style>
-  <link rel="stylesheet" href="./reveal.js/css/theme/sky.css" id="theme">
+  <link rel="stylesheet" href="./reveal.js/css/theme/smallsky.css" id="theme">
   <!-- Explicitly add zenburn for highlight support -->
   <link rel="stylesheet" href="./reveal.js/lib/css/zenburn.css" id="theme">
   <!-- Printing and PDF exports -->
@@ -89,7 +89,7 @@
 <li>Simple YAML based configuration</li>
 <li>Full version control of experimental configuration using git</li>
 <li>Hash based versioning of all model inputs and executables</li>
-<li>Supports many models: MOM5, MOM6, ACCESS-OM, ACCESS-ESM, Gold, MITgcm, Nemo, Qgcm, CICE4, CICE5, WaveWatch</li>
+<li>Supports many models: MOM5, MOM6, ACCESS-OM, ACCESS-ESM, MITgcm, CICE4, CICE5, Qgcm ...</li>
 <li>Driver based architecture allows support for other models to be added</li>
 </ul>
 </section>
@@ -150,7 +150,10 @@ if __name__ == &#39;__main__&#39;:
 <section>
 <section id="using-payu" class="title-slide slide level1">
 <h1>Using Payu</h1>
-<p>Cloning an experiment -------------------</p>
+
+</section>
+<section id="cloning-an-experiment" class="slide level2">
+<h2>Cloning an experiment</h2>
 <p>Clone an existing experiment (usually in a subdirectory in <code>$HOME</code>):</p>
 <pre class="sh"><code>cd $HOME
 mkdir -p payu/mom
@@ -161,7 +164,7 @@ git clone https://github.com/payu-org/bowl1.git</code></pre>
 <section id="run-the-experiment" class="slide level2">
 <h2>Run the experiment</h2>
 <p>Load the CMS conda environment containing payu:</p>
-<pre><code>module use /g/data3/hh5/modules
+<pre><code>module use /g/data3/hh5/public/modules
 module load conda</code></pre>
 <p>This job is pre-configured, so can just run it!</p>
 <pre class="sh"><code>cd bowl1
@@ -232,7 +235,7 @@ collate: False</code></pre>
 </tr>
 <tr class="odd">
 <td><code>manifests</code></td>
-<td>Manifest files for tracking experiment input and executable files</td>
+<td>Manifest files for tracking executables and inputs</td>
 </tr>
 </tbody>
 </table>
@@ -402,6 +405,9 @@ collate: False</code></pre>
 </tr>
 </tbody>
 </table>
+</section>
+<section class="slide level2">
+
 <p>This is currently required to use the Broadwell nodes:</p>
 <pre class="yaml"><code>platform:
    nodesize: 28
@@ -411,7 +417,7 @@ collate: False</code></pre>
 <h2>The work directory</h2>
 <p>Run the following to inspect (and test) the setup of your run:</p>
 <pre class="sh"><code>payu setup</code></pre>
-<p>This will create your <code>work/</code> directory in the lab.</p>
+<p>This will create your <code>work</code> directory in the laboratory and a symbolic link to it in your control directory.</p>
 <aside class="notes">
 <p>This is the first step once a model run begins, but it is exposed separately to allow testing all input and executable paths are correct without having to actually run the model.</p>
 <p>By default payu will not submit a job if there is an existing <code>work/</code> directory. After running <code>payu setup</code> you must run <code>payu sweep</code> or use the <code>-f</code> option to run the model <code>payu run -f</code></p>
@@ -447,12 +453,11 @@ collate: False</code></pre>
 │   └── restart.yaml
 ├── mom51_solo_default -&gt; /g/data/hh5/tmp/mom-test/bin/mom51_solo_default
 └── RESTART</code></pre>
-<p>Your config files are copied, and sometimes modified.</p>
-<p>Your input data is symlinked.</p>
+<p>Your config files are copied, and sometimes modified. Your input data is symlinked.</p>
 </section>
 <section id="a-simple-configuration" class="slide level2">
 <h2>A simple configuration</h2>
-<p>We use the YAML format</p>
+<p>The configuration file (<code>config.yaml</code>) uses the YAML format</p>
 <pre class="yaml"><code>model: mom6
 name: om4_gm_test
 
@@ -650,9 +655,9 @@ postscript: sync_output_to_gdata.sh</code></pre>
 <section id="how-is-it-tracked" class="slide level2">
 <h2>How is it tracked?</h2>
 <ul>
-<li>Uses yamanifest</li>
-<li>Creates a <code>YaML</code> file</li>
-<li>Each file (symlink) in <code>work</code> is dictionary key</li>
+<li>Uses <span class="title-ref">yamanifest &lt;https://github.com/aidanheerdegen/yamanifest&gt;</span></li>
+<li>Creates a manifest file which uses <code>YAML</code> format</li>
+<li>Each file (symlink) in <code>work</code> is a dictionary key in manifest file</li>
 <li>Manifests are tracked as part of the version control system (git), so the unique hash for every tracked file is associated with each run using version control</li>
 </ul>
 </section>
@@ -680,11 +685,11 @@ work/mom51_solo_default:
 <p>binhash uses datestamp and size combined with first 100MB of a file. Not guaranteed unique, but likely to detect if the file has changed</p>
 </aside>
 <ul>
-<li>yamanifest supports multiple hashes =&gt; hierachy of hashes</li>
+<li>yamanifest supports multiple hashes =&gt; hierarchy of hashes</li>
 <li>Unique hashes (md5, sha128) take too long on large files</li>
 <li>Fast hashing to check for file changes</li>
 <li>Use unique hash check when necessary</li>
-<li>Running <code>payu setup</code> for experiments with large number and size of input files can be useful, will precalculate expensive hashes saving time when job runs on queue</li>
+<li>Running <code>payu setup</code> for experiments with large number and size of input files can be useful: precalculate expensive hashes saves time when job runs on queue</li>
 </ul>
 </section></section>
 <section>
@@ -698,8 +703,7 @@ work/mom51_solo_default:
 <p>Sharing experiments is new, but we are working on improving this experience</p>
 </aside>
 <p>Let's have some <strong>FUN</strong> and increase the timestep:</p>
-<pre><code>cd ../mom   # Or whatever
-git clone bowl1 bowl2
+<pre><code>git clone bowl1 bowl2
 cd bowl2</code></pre>
 <p>We are in a hurry, so let's make <code>dt_ocean</code> in <code>input.nml</code> very large:</p>
 <pre><code>&amp;ocean_model_nml
@@ -707,7 +711,7 @@ cd bowl2</code></pre>
 </section>
 <section id="recording-your-progress" class="slide level2">
 <h2>Recording your progress</h2>
-<p>Track your changes to the run:</p>
+<p>See changes to the run by utilising <code>git</code>:</p>
 <pre><code>git log</code></pre>
 <p>and responsible people <em>always</em> document their changes:</p>
 <pre><code>git commit -am &quot;Testing a large timestep&quot;</code></pre>
@@ -721,12 +725,12 @@ cd bowl2</code></pre>
 </section>
 <section id="inspecting-failed-jobs" class="slide level2">
 <h2>Inspecting failed jobs</h2>
-<p>Failed jobs retain <code>mom.out</code>, <code>mom.err</code>, and <code>work/</code>.</p>
+<p>Failed jobs retain output and error files (<code>mom.out</code>, <code>mom.err</code> in this case), and a <code>work/</code> directory</p>
 <p>From <code>mom.err</code>:</p>
 <pre><code>FATAL from PE    2: ==&gt;Error: time step instability detected for baroclinic gravity waves in ocean_model_mod
 
 forrtl: error (78): process killed (SIGTERM)</code></pre>
-<p>Errors are saved to <code>archive/error_logs</code> with PBS job IDs.</p>
+<p>Errors are saved to <code>archive/error_logs</code> with PBS job IDs</p>
 <p>(Note: Error logs can get big fast!)</p>
 </section>
 <section id="github-integration" class="slide level2">
@@ -874,11 +878,6 @@ IOError: [Errno 2] No such file or directory: &#39;/home/157/mxw157/mom/course/b
 <p>Many <code>config.yaml</code> contain relative paths for inputs and executables, which can make sharing difficult!</p>
 <p>Either copy (or symlink) their files into your local lab, or modify your <code>config.yaml</code> to use absolute paths.</p>
 <p>On the developer end, we are thinking of better solutions here...</p>
-</section>
-<section id="please-send-me-your-job-script" class="slide level2">
-<h2>"Please send me your job script"</h2>
-<p>NCI will often request a job script, which is a challenge because we don't have one!</p>
-<p>... but, NCI is starting to understand, and CMS is usually prepared to run interference.</p>
 </section></section>
 <section>
 <section id="summary" class="title-slide slide level1">
