@@ -205,11 +205,11 @@ Pass ``-h`` to subcommands for subcommand specific help and options
    --force, -f           Force run to proceed, overwriting existing directories
 
 
-Cloning an experiment
-=====================
+Clone Experiment
+================
 
-* The payu configuration file, ``config.yaml`` and the model configuration files
-  are tracked directly by ``git``
+* The payu configuration file, ``config.yaml``, the model configuration files
+  and manifests are tracked directly by ``git``
 
 * When an experiment is cloned only the files tracked by ``git`` are copied
 
@@ -283,7 +283,7 @@ This job is pre-configured, so can just run it!
 
 * Model will run in ``work/`` (an ephemeral directory created in the laboratory just for that model run)
 
-* Output saved to ``archive/``
+* Output moved to ``archive/`` when run completes without error
 
 
 Inspecting the output

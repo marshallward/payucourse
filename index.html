@@ -259,10 +259,10 @@ optional arguments:
 --force, -f           Force run to proceed, overwriting existing directories</code></pre>
 </section></section>
 <section>
-<section id="cloning-an-experiment" class="title-slide slide level1">
-<h1>Cloning an experiment</h1>
+<section id="clone-experiment" class="title-slide slide level1">
+<h1>Clone Experiment</h1>
 <ul>
-<li>The payu configuration file, <code>config.yaml</code> and the model configuration files are tracked directly by <code>git</code></li>
+<li>The payu configuration file, <code>config.yaml</code>, the model configuration files and manifests are tracked directly by <code>git</code></li>
 <li>When an experiment is cloned only the files tracked by <code>git</code> are copied</li>
 <li>Other files can be added and changes to those files will be automatically added to the experiment repo</li>
 </ul>
@@ -317,7 +317,7 @@ collate: False</code></pre>
 payu run</code></pre>
 <ul>
 <li>Model will run in <code>work/</code> (an ephemeral directory created in the laboratory just for that model run)</li>
-<li>Output saved to <code>archive/</code></li>
+<li>Output moved to <code>archive/</code> when run completes without error</li>
 </ul>
 </section>
 <section id="inspecting-the-output" class="slide level2">
