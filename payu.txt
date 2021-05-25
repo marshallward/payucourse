@@ -472,7 +472,7 @@ Inspect the symbolic link to ``work`` and its contents::
    ├── INPUT
    │   ├── gotmturb.inp|_|->|nbsp|/g/data/hh5/tmp/mom-test/input/bowl1/gotmturb.inp
    │   ├── grid_spec.nc\ ->\ /g/data/hh5/tmp/mom-test/input/bowl1/grid_spec.nc
-   │   ├── ocean_barotropic.res.nc -> /scratch/w97/aph502/mom/archive/bowl1/restart000/ocean_barotropic.res.nc
+   │   ├── ocean_barotropic.res.nc -> /scratch/w97/aph502/mom/archive/bowl1/restart000/ocean_barotropic.res.nc
    │   ├── ocean_bih_friction.res.nc -> /scratch/w97/aph502/mom/archive/bowl1/restart000/ocean_bih_friction.res.nc
    │   ├── ocean_density.res.nc -> /scratch/w97/aph502/mom/archive/bowl1/restart000/ocean_density.res.nc
    │   ├── ocean_pot_temp.res.nc -> /scratch/w97/aph502/mom/archive/bowl1/restart000/ocean_pot_temp.res.nc
