@@ -150,37 +150,31 @@ payu has multiple subcommands. Invoking with the ``-h`` option will print helpfu
 Subcommands
 -----------
 
-Often used subcommands
-
 ==============  =============================================================
-
 ``init``        Initialise laboratory directories
 ``setup``       Initialise work directory
 ``sweep``       Remove ephemeral work directory and copy logs to archive
 ``run``         Submit model to queue to run
 ``collate``     Join tiled outputs (and potentially restarts). Not all models
-
 ==============  =============================================================
 
 -----
 
-Less used subcommands
+Less used
 
 ==============  =============================================================
 
 ``archive``     Clean up work directory and copy files to archive
 ``ghsetup``     Setup GitHub repository
 ``push``        Push local repo to GitHub
-
 ==============  =============================================================
 
-Never typically used:
+Never typically used
 
 ==============  =============================================================
 
 ``profile``     Profile model (not typically used)
 ``build``       Build model executable (not currently supported)
-
 ==============  =============================================================
 
 ------
