@@ -131,7 +131,7 @@ Load the CMS conda environment containing payu::
    module load conda
 
 Invoking payu
-------------
+-------------
 
 payu has multiple subcommands. Invoking with the ``-h`` option will print helpful usage message
 

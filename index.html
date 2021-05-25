@@ -152,7 +152,9 @@ if __name__ == &#39;__main__&#39;:
 <p>Load the CMS conda environment containing payu:</p>
 <pre><code>module use /g/data3/hh5/public/modules
 module load conda</code></pre>
-<p>Invoking payu ------------</p>
+</section>
+<section id="invoking-payu" class="slide level2">
+<h2>Invoking payu</h2>
 <p>payu has multiple subcommands. Invoking with the <code>-h</code> option will print helpful usage message</p>
 <pre class="sh"><code>$ payu -h
 usage: payu [-h] [--version] {archive,build,collate,ghsetup,init,list,profile,push,run,setup,sweep} ...
@@ -170,24 +172,28 @@ optional arguments:
 <table>
 <tbody>
 <tr class="odd">
+<td>&amp;nbsp;</td>
+<td></td>
+</tr>
+<tr class="even">
 <td><code>init</code></td>
 <td>Initialise laboratory directories</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>setup</code></td>
 <td>Initialise work directory</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>sweep</code></td>
 <td>Remove ephemeral work directory and copy logs to archive</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>run</code></td>
 <td>Submit model to queue to run</td>
 </tr>
-<tr class="odd">
-<td><code>collate</code></td>
-<td>Join tiled outputs (and potentially restarts). Not all models</td>
+<tr class="even">
+<td><p><code>collate</code> &amp;nbsp;</p></td>
+<td><p>Join tiled outputs (and potentially restarts). Not all models</p></td>
 </tr>
 </tbody>
 </table>
@@ -198,7 +204,7 @@ optional arguments:
 <table>
 <tbody>
 <tr class="odd">
-<td></td>
+<td>&amp;nbsp;</td>
 <td></td>
 </tr>
 <tr class="even">
@@ -210,7 +216,7 @@ optional arguments:
 <td>Setup GitHub repository</td>
 </tr>
 <tr class="even">
-<td><p><code>push</code></p></td>
+<td><p><code>push</code> &amp;nbsp;</p></td>
 <td><p>Push local repo to GitHub</p></td>
 </tr>
 </tbody>
