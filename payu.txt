@@ -153,11 +153,13 @@ Subcommands
 Often used subcommands
 
 ==============  =============================================================
+&nbsp;
 ``init``        Initialise laboratory directories
 ``setup``       Initialise work directory
 ``sweep``       Remove ephemeral work directory and copy logs to archive
 ``run``         Submit model to queue to run
 ``collate``     Join tiled outputs (and potentially restarts). Not all models
+&nbsp;
 ==============  =============================================================
 
 -----
@@ -165,16 +167,20 @@ Often used subcommands
 Less used subcommands
 
 ==============  =============================================================
+&nbsp;
 ``archive``     Clean up work directory and copy files to archive
 ``ghsetup``     Setup GitHub repository
 ``push``        Push local repo to GitHub
+&nbsp;
 ==============  =============================================================
 
 Never typically used:
 
 ==============  =============================================================
+&nbsp;
 ``profile``     Profile model (not typically used)
 ``build``       Build model executable (not currently supported)
+&nbsp;
 ==============  =============================================================
 
 ------
