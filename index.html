@@ -149,7 +149,107 @@ if __name__ == &#39;__main__&#39;:
 <section>
 <section id="using-payu" class="title-slide slide level1">
 <h1>Using Payu</h1>
+<p>Load the CMS conda environment containing payu:</p>
+<pre><code>module use /g/data3/hh5/public/modules
+module load conda</code></pre>
+</section>
+<section id="running-payu" class="slide level2">
+<h2>Running payu</h2>
+<p>payu has multiple subcommands. Invoking with the <code>-h</code> option will print help usage message</p>
+<pre class="sh"><code>$ payu -h
+usage: payu [-h] [--version] {archive,build,collate,ghsetup,init,list,profile,push,run,setup,sweep} ...
 
+positional arguments:
+{archive,build,collate,ghsetup,init,list,profile,push,run,setup,sweep}
+
+optional arguments:
+-h, --help            show this help message and exit
+--version             show program&#39;s version number and exit</code></pre>
+</section>
+<section id="subcommands" class="slide level2">
+<h2>Subcommands</h2>
+<p>Often used subcommands</p>
+<table>
+<tbody>
+<tr class="odd">
+<td>init</td>
+<td>Initialise laboratory directories</td>
+</tr>
+<tr class="even">
+<td>setup</td>
+<td>Initialise work directory</td>
+</tr>
+<tr class="odd">
+<td>sweep</td>
+<td>Remove ephemeral work directory and copy logs to archive</td>
+</tr>
+<tr class="even">
+<td>run</td>
+<td>Submit model to queue to run</td>
+</tr>
+<tr class="odd">
+<td>collate</td>
+<td>Join tiled outputs (and potentially restarts). Not all models</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section class="slide level2">
+
+<p>Less used subcommands</p>
+<table>
+<tbody>
+<tr class="odd">
+<td>archive</td>
+<td>Clean up work directory and copy files to archive</td>
+</tr>
+<tr class="even">
+<td>ghsetup</td>
+<td>Setup GitHub repository</td>
+</tr>
+<tr class="odd">
+<td>push</td>
+<td>Push local repo to GitHub</td>
+</tr>
+</tbody>
+</table>
+<p>Never typically used:</p>
+<table>
+<tbody>
+<tr class="odd">
+<td>profile</td>
+<td>Profile model (not typically used)</td>
+</tr>
+<tr class="even">
+<td>build</td>
+<td>Build model executable (not currently supported)</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section class="slide level2">
+
+<p>Pass <code>-h</code> to subcommands for subcommand specific help and options</p>
+<pre class="sh"><code>$ payu run -h
+usage: payu run [-h] [--model MODEL_TYPE] [--config CONFIG_PATH] [--initial INIT_RUN] [--nruns N_RUNS] [--laboratory LAB_PATH] [--reproduce] [--force]
+
+Run the model experiment
+
+optional arguments:
+-h, --help            show this help message and exit
+--model MODEL_TYPE, -m MODEL_TYPE
+                        Model type
+--config CONFIG_PATH, -c CONFIG_PATH
+                        Configuration file path
+--initial INIT_RUN, -i INIT_RUN
+                        Starting run counter
+--nruns N_RUNS, -n N_RUNS
+                        Number of successive experiments ro run
+--laboratory LAB_PATH, --lab LAB_PATH, -l LAB_PATH
+                        The laboratory, this will over-ride the value given in config.yaml
+--reproduce, --repro, -r
+                        Only run if manifests are correct
+--force, -f           Force run to proceed, overwriting existing directories</code></pre>
 </section>
 <section id="cloning-an-experiment" class="slide level2">
 <h2>Cloning an experiment</h2>
@@ -204,9 +304,6 @@ collate: False</code></pre>
 </section>
 <section id="run-the-experiment" class="slide level2">
 <h2>Run the experiment</h2>
-<p>Load the CMS conda environment containing payu:</p>
-<pre><code>module use /g/data3/hh5/public/modules
-module load conda</code></pre>
 <p>This job is pre-configured, so can just run it!</p>
 <pre class="sh"><code>cd bowl1
 payu run</code></pre>
@@ -581,16 +678,12 @@ calendar:
 <td>Laboratory path</td>
 </tr>
 <tr class="odd">
-<td><code>experiment</code></td>
-<td>Experiment path</td>
-</tr>
-<tr class="even">
 <td><code>control</code></td>
 <td>Control path</td>
 </tr>
 </tbody>
 </table>
-<p>Suppose you have run out of time on one project so need it to be charged under another project, but all your output files (laboratory) is under the first project? Just specify <code>shortpath</code> to be the default path of the original project code</p>
+<p>e.g. to run under multiple project codes but keep all files in the same laboratory location specify <code>shortpath</code></p>
 </section>
 <section id="mpi-support" class="slide level2">
 <h2>MPI support</h2>

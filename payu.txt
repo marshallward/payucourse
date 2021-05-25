@@ -125,6 +125,86 @@ Prehistoric Payu
 Using Payu
 ==========
 
+Load the CMS conda environment containing payu::
+
+   module use /g/data3/hh5/public/modules
+   module load conda
+
+Running payu
+------------
+
+payu has multiple subcommands. Invoking with the ``-h`` option will print help usage message
+
+.. code::sh
+
+   $ payu -h
+   usage: payu [-h] [--version] {archive,build,collate,ghsetup,init,list,profile,push,run,setup,sweep} ...
+
+   positional arguments:
+   {archive,build,collate,ghsetup,init,list,profile,push,run,setup,sweep}
+
+   optional arguments:
+   -h, --help            show this help message and exit
+   --version             show program's version number and exit
+
+Subcommands
+-----------
+
+Often used subcommands
+
+======================  =============================================================
+init                    Initialise laboratory directories
+setup                   Initialise work directory
+sweep                   Remove ephemeral work directory and copy logs to archive
+run                     Submit model to queue to run
+collate                 Join tiled outputs (and potentially restarts). Not all models
+======================  =============================================================
+
+-----
+
+Less used subcommands
+
+======================  =============================================================
+archive                 Clean up work directory and copy files to archive
+ghsetup                 Setup GitHub repository
+push                    Push local repo to GitHub
+======================  =============================================================
+
+Never typically used:
+
+======================  =============================================================
+profile                 Profile model (not typically used)
+build                   Build model executable (not currently supported)
+======================  =============================================================
+
+------
+
+Pass ``-h`` to subcommands for subcommand specific help and options
+
+.. code::sh
+
+   $ payu run -h
+   usage: payu run [-h] [--model MODEL_TYPE] [--config CONFIG_PATH] [--initial INIT_RUN] [--nruns N_RUNS] [--laboratory LAB_PATH] [--reproduce] [--force]
+
+   Run the model experiment
+
+   optional arguments:
+   -h, --help            show this help message and exit
+   --model MODEL_TYPE, -m MODEL_TYPE
+                           Model type
+   --config CONFIG_PATH, -c CONFIG_PATH
+                           Configuration file path
+   --initial INIT_RUN, -i INIT_RUN
+                           Starting run counter
+   --nruns N_RUNS, -n N_RUNS
+                           Number of successive experiments ro run
+   --laboratory LAB_PATH, --lab LAB_PATH, -l LAB_PATH
+                           The laboratory, this will over-ride the value given in config.yaml
+   --reproduce, --repro, -r
+                           Only run if manifests are correct
+   --force, -f           Force run to proceed, overwriting existing directories
+
+
 Cloning an experiment
 ---------------------
 
@@ -193,11 +273,6 @@ Experiment Configuration
 
 Run the experiment
 ------------------
-
-Load the CMS conda environment containing payu::
-
-   module use /g/data3/hh5/public/modules
-   module load conda
 
 This job is pre-configured, so can just run it!
 
@@ -523,13 +598,11 @@ Default paths can be set explicitly
 ==============    ===================
 ``shortpath``     Root ("scratch") path
 ``laboratory``    Laboratory path
-``experiment``    Experiment path
 ``control``       Control path
 ==============    ===================
 
-Suppose you have run out of time on one project so need it to be charged under another
-project, but all your output files (laboratory) is under the first project? Just specify
-``shortpath`` to be the default path of the original project code
+e.g. to run under multiple project codes but keep all files in the same laboratory location
+specify ``shortpath``
 
 
 MPI support
