@@ -275,7 +275,7 @@ Experiment Configuration
 Run the experiment
 ------------------
 
-This job is pre-configured, so can just run it!
+* This job is pre-configured, so can just run it!
 
 .. code:: sh
 
@@ -338,6 +338,17 @@ You "control" the laboratory externally
 
 Laboratory overview
 -------------------
+
+.. notes::
+
+   work is where the ephemeral work directories are created. Named for the experiment
+   name, usually the same as the directory name. 
+   archive where outputs/restarts saved in directory same as experiment name
+   means experiment names must be unique for each laboratory, which typically means
+   for each model
+   codebase not typically used by payu, for convenience. 
+   bin and input for user convenience, a place where payu looks
+
 
 ============   ===============================
 ``archive``    Experiment output and restarts
@@ -442,6 +453,12 @@ to it in your control directory.
 Inside the work directory
 -------------------------
 
+.. notes::
+
+   Executable linked into work: for tracking and so obvious which exe being used
+
+
+
 Inspect the symbolic link to ``work`` and its contents::
 
    work
@@ -450,7 +467,7 @@ Inspect the symbolic link to ``work`` and its contents::
    ├── diag_table
    ├── field_table
    ├── INPUT
-   │   ├── gotmturb.inp -> /g/data/hh5/tmp/mom-test/input/bowl1/gotmturb.inp
+   │   ├── gotmturb.inp|_|->|_|/g/data/hh5/tmp/mom-test/input/bowl1/gotmturb.inp
    │   ├── grid_spec.nc -> /g/data/hh5/tmp/mom-test/input/bowl1/grid_spec.nc
    │   ├── ocean_barotropic.res.nc -> /scratch/w97/aph502/mom/archive/bowl1/restart000/ocean_barotropic.res.nc
    │   ├── ocean_bih_friction.res.nc -> /scratch/w97/aph502/mom/archive/bowl1/restart000/ocean_bih_friction.res.nc

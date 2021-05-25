@@ -316,7 +316,9 @@ collate: False</code></pre>
 </section>
 <section id="run-the-experiment" class="slide level2">
 <h2>Run the experiment</h2>
-<p>This job is pre-configured, so can just run it!</p>
+<ul>
+<li>This job is pre-configured, so can just run it!</li>
+</ul>
 <pre class="sh"><code>cd bowl1
 payu run</code></pre>
 <ul>
@@ -389,6 +391,9 @@ payu run</code></pre>
 </section>
 <section id="laboratory-overview" class="slide level2">
 <h2>Laboratory overview</h2>
+<aside class="notes">
+<p>work is where the ephemeral work directories are created. Named for the experiment name, usually the same as the directory name. archive where outputs/restarts saved in directory same as experiment name means experiment names must be unique for each laboratory, which typically means for each model codebase not typically used by payu, for convenience. bin and input for user convenience, a place where payu looks</p>
+</aside>
 <table>
 <tbody>
 <tr class="odd">
@@ -547,6 +552,9 @@ payu run</code></pre>
 </section>
 <section id="inside-the-work-directory" class="slide level2">
 <h2>Inside the work directory</h2>
+<aside class="notes">
+<p>Executable linked into work: for tracking and so obvious which exe being used</p>
+</aside>
 <p>Inspect the symbolic link to <code>work</code> and its contents:</p>
 <pre><code>work
 ├── config.yaml
@@ -554,7 +562,7 @@ payu run</code></pre>
 ├── diag_table
 ├── field_table
 ├── INPUT
-│   ├── gotmturb.inp -&gt; /g/data/hh5/tmp/mom-test/input/bowl1/gotmturb.inp
+│   ├── gotmturb.inp|_|-&gt;|_|/g/data/hh5/tmp/mom-test/input/bowl1/gotmturb.inp
 │   ├── grid_spec.nc -&gt; /g/data/hh5/tmp/mom-test/input/bowl1/grid_spec.nc
 │   ├── ocean_barotropic.res.nc -&gt; /scratch/w97/aph502/mom/archive/bowl1/restart000/ocean_barotropic.res.nc
 │   ├── ocean_bih_friction.res.nc -&gt; /scratch/w97/aph502/mom/archive/bowl1/restart000/ocean_bih_friction.res.nc
