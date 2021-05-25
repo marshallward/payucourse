@@ -203,14 +203,18 @@ optional arguments:
 <td></td>
 </tr>
 <tr class="even">
+<td><code>list</code></td>
+<td>List all supported models</td>
+</tr>
+<tr class="odd">
 <td><code>archive</code></td>
 <td>Clean up work directory and copy files to archive</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>ghsetup</code></td>
 <td>Setup GitHub repository</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>push</code></td>
 <td>Push local repo to GitHub</td>
 </tr>
@@ -663,13 +667,16 @@ calendar:
 <aside class="notes">
 <p>This does not affect the total number of runs which is goverened entirely by the value passed to the <code>-n</code> option.</p>
 </aside>
-<p>To do multiple runs in sequence:</p>
+<ul>
+<li>To do multiple runs in sequence:</li>
+</ul>
 <pre class=""><code>payu run -n 20</code></pre>
-<p>We save every output, and every 5th restart.</p>
-<p>To change the rate restart files are saved:</p>
-<pre><code>restart_freq: 1</code></pre>
-<p>To run the model multiple times for each submission to the queue:</p>
-<pre><code>runspersub: 5</code></pre>
+<ul>
+<li><p>We save every output, and every 5th restart. To change the rate restart files are saved:</p>
+<pre><code>restart_freq: 1</code></pre></li>
+<li><p>To run the model multiple times for each submission to the queue:</p>
+<pre><code>runspersub: 5</code></pre></li>
+</ul>
 <p>will run the model 5 times during each queued job. Can help reduce overhead spent waiting in queue</p>
 </section>
 <section id="path-control" class="slide level2">
@@ -714,14 +721,19 @@ calendar:
 </section>
 <section id="userscript-support" class="slide level2">
 <h2>Userscript support</h2>
-<p>Subcommands and scripts can be injected after key steps</p>
+<ul>
+<li>Subcommands and scripts can be injected after key steps</li>
+</ul>
 <pre class="yaml"><code>userscripts:
    init: &#39;echo &quot;some_data&quot; &gt; input.nml&#39;
    setup: patch_inputs.py
    run: &#39;qsub postprocess.sh&#39;
 
 postscript: sync_output_to_gdata.sh</code></pre>
-<p>These will run after the prescribed section. <code>postscript</code> runs when a run finishes, if the output is collated it runs after that completes.</p>
+<ul>
+<li>These will run after the prescribed section.</li>
+<li><code>postscript</code> runs when a run finishes, if the output is collated it runs after that completes.</li>
+</ul>
 </section>
 <section id="supported-models" class="slide level2">
 <h2>Supported models</h2>

@@ -164,6 +164,7 @@ Less used
 
 ==============  =============================================================
 
+``list``        List all supported models
 ``archive``     Clean up work directory and copy files to archive
 ``ghsetup``     Setup GitHub repository
 ``push``        Push local repo to GitHub
@@ -574,19 +575,17 @@ Multiple runs
    This does not affect the total number of runs which is goverened entirely by the value passed
    to the ``-n`` option.
 
-To do multiple runs in sequence:
+* To do multiple runs in sequence:
 
 .. code::
 
    payu run -n 20
 
-We save every output, and every 5th restart.
-
-To change the rate restart files are saved::
+* We save every output, and every 5th restart. To change the rate restart files are saved::
 
    restart_freq: 1
 
-To run the model multiple times for each submission to the queue::
+* To run the model multiple times for each submission to the queue::
 
    runspersub: 5
 
@@ -638,7 +637,7 @@ It is not recommended to change these without understanding and good reason
 Userscript support
 ------------------
 
-Subcommands and scripts can be injected after key steps
+* Subcommands and scripts can be injected after key steps
 
 .. code:: yaml
 
@@ -649,8 +648,10 @@ Subcommands and scripts can be injected after key steps
 
    postscript: sync_output_to_gdata.sh
 
-These will run after the prescribed section.  ``postscript`` runs when a run
-finishes, if the output is collated it runs after that completes.
+* These will run after the prescribed section.  
+
+* ``postscript`` runs when a run finishes, if the output is collated it runs 
+  after that completes.
 
 
 Supported models
