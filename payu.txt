@@ -130,10 +130,10 @@ Load the CMS conda environment containing payu::
    module use /g/data3/hh5/public/modules
    module load conda
 
-Running payu
+Invoking payu
 ------------
 
-payu has multiple subcommands. Invoking with the ``-h`` option will print help usage message
+payu has multiple subcommands. Invoking with the ``-h`` option will print helpful usage message
 
 .. code::sh
 
@@ -152,30 +152,30 @@ Subcommands
 
 Often used subcommands
 
-======================  =============================================================
-init                    Initialise laboratory directories
-setup                   Initialise work directory
-sweep                   Remove ephemeral work directory and copy logs to archive
-run                     Submit model to queue to run
-collate                 Join tiled outputs (and potentially restarts). Not all models
-======================  =============================================================
+==============  =============================================================
+``init``        Initialise laboratory directories
+``setup``       Initialise work directory
+``sweep``       Remove ephemeral work directory and copy logs to archive
+``run``         Submit model to queue to run
+``collate``     Join tiled outputs (and potentially restarts). Not all models
+==============  =============================================================
 
 -----
 
 Less used subcommands
 
-======================  =============================================================
-archive                 Clean up work directory and copy files to archive
-ghsetup                 Setup GitHub repository
-push                    Push local repo to GitHub
-======================  =============================================================
+==============  =============================================================
+``archive``     Clean up work directory and copy files to archive
+``ghsetup``     Setup GitHub repository
+``push``        Push local repo to GitHub
+==============  =============================================================
 
 Never typically used:
 
-======================  =============================================================
-profile                 Profile model (not typically used)
-build                   Build model executable (not currently supported)
-======================  =============================================================
+==============  =============================================================
+``profile``     Profile model (not typically used)
+``build``       Build model executable (not currently supported)
+==============  =============================================================
 
 ------
 
@@ -206,7 +206,7 @@ Pass ``-h`` to subcommands for subcommand specific help and options
 
 
 Cloning an experiment
----------------------
+=====================
 
 * The payu configuration file, ``config.yaml`` and the model configuration files
   are tracked directly by ``git``
@@ -288,6 +288,12 @@ This job is pre-configured, so can just run it!
 
 Inspecting the output
 ---------------------
+
+.. notes::
+   Not all the files exist in these locations at all time. Model output and error
+   files will reside in control while model is running, but will be archived when
+   a run succesfully finishes.
+   PBS output files won't appear until job completed
 
 ======================  ======================
 ``mom.out``             Model output
@@ -971,13 +977,13 @@ Run ``payu setup`` and test that the experiment is set up properly.
 Cloning issues
 --------------
 
-Many ``config.yaml`` contain relative paths for inputs and executables, which
-can make sharing difficult!
+* Some ``config.yaml`` contain relative paths for inputs and executables, which
+can make sharing difficult.
 
-Either copy (or symlink) their files into your local lab, or modify your
+* Either copy (or symlink) their files into your local lab, or modify your
 ``config.yaml`` to use absolute paths.
 
-On the developer end, we are thinking of better solutions here...
+* Manifests can largely overcome this issue, but there are subtleties in how to implement this
 
 
 Summary

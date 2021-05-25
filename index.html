@@ -152,10 +152,8 @@ if __name__ == &#39;__main__&#39;:
 <p>Load the CMS conda environment containing payu:</p>
 <pre><code>module use /g/data3/hh5/public/modules
 module load conda</code></pre>
-</section>
-<section id="running-payu" class="slide level2">
-<h2>Running payu</h2>
-<p>payu has multiple subcommands. Invoking with the <code>-h</code> option will print help usage message</p>
+<p>Invoking payu ------------</p>
+<p>payu has multiple subcommands. Invoking with the <code>-h</code> option will print helpful usage message</p>
 <pre class="sh"><code>$ payu -h
 usage: payu [-h] [--version] {archive,build,collate,ghsetup,init,list,profile,push,run,setup,sweep} ...
 
@@ -172,23 +170,23 @@ optional arguments:
 <table>
 <tbody>
 <tr class="odd">
-<td>init</td>
+<td><code>init</code></td>
 <td>Initialise laboratory directories</td>
 </tr>
 <tr class="even">
-<td>setup</td>
+<td><code>setup</code></td>
 <td>Initialise work directory</td>
 </tr>
 <tr class="odd">
-<td>sweep</td>
+<td><code>sweep</code></td>
 <td>Remove ephemeral work directory and copy logs to archive</td>
 </tr>
 <tr class="even">
-<td>run</td>
+<td><code>run</code></td>
 <td>Submit model to queue to run</td>
 </tr>
 <tr class="odd">
-<td>collate</td>
+<td><code>collate</code></td>
 <td>Join tiled outputs (and potentially restarts). Not all models</td>
 </tr>
 </tbody>
@@ -200,15 +198,15 @@ optional arguments:
 <table>
 <tbody>
 <tr class="odd">
-<td>archive</td>
+<td><code>archive</code></td>
 <td>Clean up work directory and copy files to archive</td>
 </tr>
 <tr class="even">
-<td>ghsetup</td>
+<td><code>ghsetup</code></td>
 <td>Setup GitHub repository</td>
 </tr>
 <tr class="odd">
-<td>push</td>
+<td><code>push</code></td>
 <td>Push local repo to GitHub</td>
 </tr>
 </tbody>
@@ -217,11 +215,11 @@ optional arguments:
 <table>
 <tbody>
 <tr class="odd">
-<td>profile</td>
+<td><code>profile</code></td>
 <td>Profile model (not typically used)</td>
 </tr>
 <tr class="even">
-<td>build</td>
+<td><code>build</code></td>
 <td>Build model executable (not currently supported)</td>
 </tr>
 </tbody>
@@ -250,9 +248,10 @@ optional arguments:
 --reproduce, --repro, -r
                         Only run if manifests are correct
 --force, -f           Force run to proceed, overwriting existing directories</code></pre>
-</section>
-<section id="cloning-an-experiment" class="slide level2">
-<h2>Cloning an experiment</h2>
+</section></section>
+<section>
+<section id="cloning-an-experiment" class="title-slide slide level1">
+<h1>Cloning an experiment</h1>
 <ul>
 <li>The payu configuration file, <code>config.yaml</code> and the model configuration files are tracked directly by <code>git</code></li>
 <li>When an experiment is cloned only the files tracked by <code>git</code> are copied</li>
@@ -314,6 +313,9 @@ payu run</code></pre>
 </section>
 <section id="inspecting-the-output" class="slide level2">
 <h2>Inspecting the output</h2>
+<aside class="notes">
+<p>Not all the files exist in these locations at all time. Model output and error files will reside in control while model is running, but will be archived when a run succesfully finishes. PBS output files won't appear until job completed</p>
+</aside>
 <table>
 <tbody>
 <tr class="odd">
@@ -978,9 +980,11 @@ IOError: [Errno 2] No such file or directory: &#39;/home/157/mxw157/mom/course/b
 </section>
 <section id="cloning-issues" class="slide level2">
 <h2>Cloning issues</h2>
-<p>Many <code>config.yaml</code> contain relative paths for inputs and executables, which can make sharing difficult!</p>
-<p>Either copy (or symlink) their files into your local lab, or modify your <code>config.yaml</code> to use absolute paths.</p>
-<p>On the developer end, we are thinking of better solutions here...</p>
+<p>* Some <code>config.yaml</code> contain relative paths for inputs and executables, which can make sharing difficult.</p>
+<p>* Either copy (or symlink) their files into your local lab, or modify your <code>config.yaml</code> to use absolute paths.</p>
+<ul>
+<li>Manifests can largely overcome this issue, but there are subtleties in how to implement this</li>
+</ul>
 </section></section>
 <section>
 <section id="summary" class="title-slide slide level1">
