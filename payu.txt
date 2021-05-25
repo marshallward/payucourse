@@ -457,7 +457,8 @@ Inside the work directory
 
    Executable linked into work: for tracking and so obvious which exe being used
 
-
+.. |_| unicode:: 0xA0 
+   :trim:
 
 Inspect the symbolic link to ``work`` and its contents::
 
