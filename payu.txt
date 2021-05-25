@@ -5,7 +5,7 @@ Payu
 :subtitle: A climate model workflow manager
 :author: Marshall Ward and Aidan Heerdegen
 :description: A Payu training course
-:date: 18 October 2020
+:date: 25th May 2021
 
 
 What is Payu?
@@ -43,7 +43,7 @@ Features
 --------
 
 * Simple YAML based configuration
-* Full version control of experimental configuration using git
+* Full automatic version control of experimental configuration using ``git``
 * Hash based versioning of all model inputs and executables
 * Supports many models: MOM5, MOM6, ACCESS-OM, ACCESS-ESM, MITgcm, CICE4, CICE5, Qgcm ...
 * Driver based architecture allows support for other models to be added
@@ -128,6 +128,16 @@ Using Payu
 Cloning an experiment
 ---------------------
 
+* The payu configuration file, ``config.yaml`` and the model configuration files
+  are tracked directly by ``git``
+
+* When an experiment is cloned only the files tracked by ``git`` are copied
+
+* Other files can be added and changes to those files will be automatically added 
+  to the experiment repo
+
+-----
+
 Clone an existing experiment (usually in a subdirectory in ``$HOME``):
 
 .. code:: sh
@@ -136,46 +146,28 @@ Clone an existing experiment (usually in a subdirectory in ``$HOME``):
    mkdir -p payu/mom
    cd payu/mom
    git clone https://github.com/payu-org/bowl1.git
+   cd bowl1
 
 This is the "*control directory*" for ``bowl1``
-
-
-Run the experiment
-------------------
-
-Load the CMS conda environment containing payu::
-
-   module use /g/data3/hh5/public/modules
-   module load conda
-
-This job is pre-configured, so can just run it!
-
-.. code:: sh
-
-   cd bowl1
-   payu run
-
-* Model will run in ``work/`` (an ephemeral directory just for that model run)
-
-* Output saved to ``archive/``
-
 
 Your experiment
 ---------------
 
-Your Payu configuration file:
+* The newly cloned experiment consists of the ``config.yaml``, the config files for
+  this model (MOM) and, optionally, file manifests
 
-* ``config.yaml``
+.. code:: sh
 
-Your model (MOM) configuration files:
-
-* ``input.nml``
-
-* ``diag_table``
-
-* ``data_table``
-
-* ``field_table``
+   bowl1/
+      ├── config.yaml
+      ├── data_table
+      ├── diag_table
+      ├── field_table
+      ├── input.nml
+      └── manifests
+         ├── exe.yaml
+         ├── input.yaml
+         └── restart.yaml
 
 
 Experiment Configuration
@@ -197,6 +189,26 @@ Experiment Configuration
     
     # Config
     collate: False
+
+
+Run the experiment
+------------------
+
+Load the CMS conda environment containing payu::
+
+   module use /g/data3/hh5/public/modules
+   module load conda
+
+This job is pre-configured, so can just run it!
+
+.. code:: sh
+
+   cd bowl1
+   payu run
+
+* Model will run in ``work/`` (an ephemeral directory created in the laboratory just for that model run)
+
+* Output saved to ``archive/``
 
 
 Inspecting the output
@@ -611,8 +623,8 @@ How is it tracked?
 * Uses `yamanifest <https://github.com/aidanheerdegen/yamanifest>`_
 * Creates a manifest file which uses ``YAML`` format
 * Each file (symlink) in ``work`` is a dictionary key in manifest file 
-* Manifests are tracked as part of the version control system (git), so the unique hash 
-  for every tracked file is associated with each run using version control
+* Manifests files are tracked by ``git``, so the unique hash for every 
+  tracked file is associated with each run using version control
 
 Example
 -------

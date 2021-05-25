@@ -4,7 +4,6 @@
   <meta charset="utf-8">
   <meta name="generator" content="pandoc">
   <meta name="author" content="Marshall Ward and Aidan Heerdegen">
-  <meta name="dcterms.date" content="2020-10-18">
   <title>Payu</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -60,7 +59,7 @@
   <h1 class="title">Payu</h1>
   <p class="subtitle" style="text-align: left;"><p>A climate model workflow manager</p></p>
   <p class="author" style="text-align: right;">Marshall Ward and Aidan Heerdegen</p>
-  <p class="date" style="text-align: right;">18 October 2020</p>
+  <p class="date" style="text-align: right;">25th May 2021</p>
 </section>
 
 <section>
@@ -87,7 +86,7 @@
 <h2>Features</h2>
 <ul>
 <li>Simple YAML based configuration</li>
-<li>Full version control of experimental configuration using git</li>
+<li>Full automatic version control of experimental configuration using <code>git</code></li>
 <li>Hash based versioning of all model inputs and executables</li>
 <li>Supports many models: MOM5, MOM6, ACCESS-OM, ACCESS-ESM, MITgcm, CICE4, CICE5, Qgcm ...</li>
 <li>Driver based architecture allows support for other models to be added</li>
@@ -154,39 +153,37 @@ if __name__ == &#39;__main__&#39;:
 </section>
 <section id="cloning-an-experiment" class="slide level2">
 <h2>Cloning an experiment</h2>
+<ul>
+<li>The payu configuration file, <code>config.yaml</code> and the model configuration files are tracked directly by <code>git</code></li>
+<li>When an experiment is cloned only the files tracked by <code>git</code> are copied</li>
+<li>Other files can be added and changes to those files will be automatically added to the experiment repo</li>
+</ul>
+</section>
+<section class="slide level2">
+
 <p>Clone an existing experiment (usually in a subdirectory in <code>$HOME</code>):</p>
 <pre class="sh"><code>cd $HOME
 mkdir -p payu/mom
 cd payu/mom
-git clone https://github.com/payu-org/bowl1.git</code></pre>
+git clone https://github.com/payu-org/bowl1.git
+cd bowl1</code></pre>
 <p>This is the "<em>control directory</em>" for <code>bowl1</code></p>
-</section>
-<section id="run-the-experiment" class="slide level2">
-<h2>Run the experiment</h2>
-<p>Load the CMS conda environment containing payu:</p>
-<pre><code>module use /g/data3/hh5/public/modules
-module load conda</code></pre>
-<p>This job is pre-configured, so can just run it!</p>
-<pre class="sh"><code>cd bowl1
-payu run</code></pre>
-<ul>
-<li>Model will run in <code>work/</code> (an ephemeral directory just for that model run)</li>
-<li>Output saved to <code>archive/</code></li>
-</ul>
 </section>
 <section id="your-experiment" class="slide level2">
 <h2>Your experiment</h2>
-<p>Your Payu configuration file:</p>
 <ul>
-<li><code>config.yaml</code></li>
+<li>The newly cloned experiment consists of the <code>config.yaml</code>, the config files for this model (MOM) and, optionally, file manifests</li>
 </ul>
-<p>Your model (MOM) configuration files:</p>
-<ul>
-<li><code>input.nml</code></li>
-<li><code>diag_table</code></li>
-<li><code>data_table</code></li>
-<li><code>field_table</code></li>
-</ul>
+<pre class="sh"><code>bowl1/
+   ├── config.yaml
+   ├── data_table
+   ├── diag_table
+   ├── field_table
+   ├── input.nml
+   └── manifests
+      ├── exe.yaml
+      ├── input.yaml
+      └── restart.yaml</code></pre>
 </section>
 <section id="experiment-configuration" class="slide level2">
 <h2>Experiment Configuration</h2>
@@ -204,6 +201,19 @@ exe: /g/data/hh5/tmp/mom-test/bin/mom51_solo_default
 
 # Config
 collate: False</code></pre>
+</section>
+<section id="run-the-experiment" class="slide level2">
+<h2>Run the experiment</h2>
+<p>Load the CMS conda environment containing payu:</p>
+<pre><code>module use /g/data3/hh5/public/modules
+module load conda</code></pre>
+<p>This job is pre-configured, so can just run it!</p>
+<pre class="sh"><code>cd bowl1
+payu run</code></pre>
+<ul>
+<li>Model will run in <code>work/</code> (an ephemeral directory created in the laboratory just for that model run)</li>
+<li>Output saved to <code>archive/</code></li>
+</ul>
 </section>
 <section id="inspecting-the-output" class="slide level2">
 <h2>Inspecting the output</h2>
@@ -658,7 +668,7 @@ postscript: sync_output_to_gdata.sh</code></pre>
 <li>Uses <a href="https://github.com/aidanheerdegen/yamanifest">yamanifest</a></li>
 <li>Creates a manifest file which uses <code>YAML</code> format</li>
 <li>Each file (symlink) in <code>work</code> is a dictionary key in manifest file</li>
-<li>Manifests are tracked as part of the version control system (git), so the unique hash for every tracked file is associated with each run using version control</li>
+<li>Manifests files are tracked by <code>git</code>, so the unique hash for every tracked file is associated with each run using version control</li>
 </ul>
 </section>
 <section id="example" class="slide level2">
